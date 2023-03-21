@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_chatgpt/app_bloc_observer.dart';
-import 'package:flutter_chatgpt/bloc/counter_bloc.dart';
 import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
 import 'package:flutter_chatgpt/route.dart';
 import 'package:get_it/get_it.dart';
