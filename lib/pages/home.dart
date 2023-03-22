@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_chatgpt/bloc/counter_bloc.dart';
+import 'package:flutter_chatgpt/bloc//conversation_bloc.dart';
 import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
 import 'package:flutter_chatgpt/device/form_factor.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -27,23 +27,14 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           : null,
       drawer: useTabs ? const SideMenu() : null,
-      body: BlocBuilder<CounterBloc, CounterState>(
-        buildWhen: (previous, current) {
-          if (current.states == CounterStates.success) return true;
-          if (current.states == CounterStates.loading) {}
-          return false;
-        },
-        builder: (context, state) {
-          return Stack(
-            children: [
-              useTabs
-                  ? const ChatWindow()
-                  : Row(
-                      children: const [SideMenu(), ChatWindow()],
-                    ),
-            ],
-          );
-        },
+      body: Stack(
+        children: [
+          useTabs
+              ? const ChatWindow()
+              : Row(
+                  children: const [SideMenu(), ChatWindow()],
+                ),
+        ],
       ),
     );
   }
@@ -59,58 +50,72 @@ class SideMenu extends StatefulWidget {
 class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          color: BlocProvider.of<UserSettingCubit>(context)
-              .state
-              .themeData
-              .cardColor,
-          border: const Border(right: BorderSide(width: .3))),
-      constraints: const BoxConstraints(maxWidth: 200),
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text('Item $index'),
-                );
-              },
-            ),
+    return BlocBuilder<ConversationBloc, ConversationState>(
+      bloc: ConversationBloc(),
+      builder: (context, state) {
+        return Container(
+          decoration: BoxDecoration(
+              color: BlocProvider.of<UserSettingCubit>(context)
+                  .state
+                  .themeData
+                  .cardColor,
+              border: const Border(right: BorderSide(width: .3))),
+          constraints: const BoxConstraints(maxWidth: 200),
+          child: Column(
+            children: [
+              state.runtimeType == ConversationInitial
+                  ? Expanded(
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: const Text('Add Conversation'),
+                        ),
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: state.conversations.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text('Item $index'),
+                          );
+                        },
+                      ),
+                    ),
+              const Divider(thickness: .3),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton.icon(
+                      onPressed: () {
+                        EasyLoading.showInfo('还没实现');
+                      },
+                      label: const Text("New Conversation"),
+                      icon: const Icon(Icons.add_box),
+                    ),
+                    TextButton.icon(
+                      onPressed: () {
+                        EasyLoading.showInfo('还没实现');
+                      },
+                      label: const Text("Version：1.0.1"),
+                      icon: const Icon(Icons.info),
+                    ),
+                    TextButton.icon(
+                      onPressed: () {
+                        EasyLoading.showInfo('还没实现');
+                      },
+                      label: const Text("Settings"),
+                      icon: const Icon(Icons.settings),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
-          const Divider(thickness: .3),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextButton.icon(
-                  onPressed: () {
-                    EasyLoading.showInfo('还没实现');
-                  },
-                  label: const Text("New Conversation"),
-                  icon: const Icon(Icons.add_box),
-                ),
-                TextButton.icon(
-                  onPressed: () {
-                    EasyLoading.showInfo('还没实现');
-                  },
-                  label: const Text("Version：1.0.1"),
-                  icon: const Icon(Icons.info),
-                ),
-                TextButton.icon(
-                  onPressed: () {
-                    EasyLoading.showInfo('还没实现');
-                  },
-                  label: const Text("Settings"),
-                  icon: const Icon(Icons.settings),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 }

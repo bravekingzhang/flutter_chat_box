@@ -16,13 +16,18 @@ class Conversation {
 }
 
 class Message {
+  int? id;
   String conversationId;
   Role role;
   String text;
   Message(
-      {required this.conversationId, required this.text, required this.role});
+      {this.id,
+      required this.conversationId,
+      required this.text,
+      required this.role});
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'uuid': conversationId,
       'role': role.index,
       'text': text,
@@ -112,6 +117,16 @@ class ConversationRepository {
     );
   }
 
+  Future<void> updateConversation(Conversation conversation) async {
+    final db = await _getDb();
+    await db.update(
+      _tableConversationName,
+      conversation.toMap(),
+      where: '$_columnUuid = ?',
+      whereArgs: [conversation.uuid],
+    );
+  }
+
   Future<void> deleteConversation(String uuid) async {
     final db = await _getDb();
     await db.transaction((txn) async {
@@ -136,7 +151,9 @@ class ConversationRepository {
       final role = Role.values[maps[i][_columnRole]];
       final text = maps[i][_columnText];
       final uuid = maps[i][_columnUuid];
+      final id = maps[i][_columnId];
       return Message(
+        id: id,
         role: role,
         text: text,
         conversationId: uuid,
