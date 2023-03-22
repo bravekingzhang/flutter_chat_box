@@ -79,7 +79,7 @@ class _SideMenuState extends State<SideMenu> {
                   .themeData
                   .cardColor,
               border: const Border(right: BorderSide(width: .3))),
-          constraints: const BoxConstraints(maxWidth: 200),
+          constraints: const BoxConstraints(maxWidth: 300),
           child: Column(
             children: [
               state.runtimeType == ConversationInitial
@@ -98,7 +98,16 @@ class _SideMenuState extends State<SideMenu> {
                         itemCount: state.conversations.length,
                         itemBuilder: (context, index) {
                           return ListTile(
+                            leading: const Icon(Icons.chat),
                             title: Text(state.conversations[index].name),
+                            trailing: Builder(builder: (context) {
+                              return IconButton(
+                                  onPressed: () {
+                                    //显示一个overlay操作
+                                    _showConversationDetail(context, index);
+                                  },
+                                  icon: const Icon(Icons.more_horiz));
+                            }),
                           );
                         },
                       ),
@@ -138,6 +147,42 @@ class _SideMenuState extends State<SideMenu> {
         );
       },
     );
+  }
+
+  void _showConversationDetail(BuildContext context, int index) {
+    final RenderBox button = context.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context)!.context.findRenderObject() as RenderBox;
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset.zero, ancestor: overlay),
+        button.localToGlobal(button.size.bottomRight(Offset.zero),
+            ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
+    showMenu(
+      context: context,
+      position: position,
+      items: [
+        PopupMenuItem(
+          child: Text("Delete"),
+          value: "delete",
+        ),
+        PopupMenuItem(
+          child: Text("ReName"),
+          value: "rename",
+        ),
+      ],
+    ).then((value) {
+      if (value == "delete") {
+        BlocProvider.of<ConversationBloc>(context).add(DeleteConversationEvent(
+            context.read<ConversationBloc>().state.conversations[index]));
+      } else if (value == "rename") {
+        BlocProvider.of<ConversationBloc>(context).add(UpdateConversationEvent(
+            context.read<ConversationBloc>().state.conversations[index]));
+      }
+    });
   }
 
   void _showNewConversationDialog(BuildContext context) {
