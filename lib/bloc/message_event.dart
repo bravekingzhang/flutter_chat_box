@@ -26,9 +26,9 @@ class DeleteMessageEvent extends MessageEvent {
 }
 
 class LoadAllMessagesEvent extends MessageEvent {
-  final Message message;
-  const LoadAllMessagesEvent(this.message);
+  final String conversationUUid;
+  const LoadAllMessagesEvent(this.conversationUUid);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [conversationUUid];
 }

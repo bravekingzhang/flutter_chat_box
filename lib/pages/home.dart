@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chatgpt/bloc//conversation_bloc.dart';
+import 'package:flutter_chatgpt/bloc/message_bloc.dart';
 import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
 import 'package:flutter_chatgpt/device/form_factor.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
@@ -31,25 +32,36 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           : null,
       drawer: useTabs
-          ? BlocProvider(
-              create: (context) => ConversationBloc(),
+          ? MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (context) => ConversationBloc(),
+                ),
+                BlocProvider(
+                  create: (context) => MessageBloc(),
+                ),
+              ],
               child: const SideMenu(),
             )
           : null,
-      body: Stack(
-        children: [
-          useTabs
-              ? const ChatWindow()
-              : Row(
-                  children: [
-                    BlocProvider(
-                      create: (context) => ConversationBloc(),
-                      child: const SideMenu(),
-                    ),
-                    const ChatWindow()
-                  ],
-                ),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => ConversationBloc(),
+          ),
+          BlocProvider(
+            create: (context) => MessageBloc(),
+          ),
         ],
+        child: Stack(
+          children: [
+            useTabs
+                ? const ChatWindow()
+                : Row(
+                    children: const [SideMenu(), ChatWindow()],
+                  ),
+          ],
+        ),
       ),
     );
   }
@@ -63,9 +75,22 @@ class SideMenu extends StatefulWidget {
 }
 
 class _SideMenuState extends State<SideMenu> {
-  void _newConversation() {
-    BlocProvider.of<ConversationBloc>(context).add(AddConversationEvent(
-        Conversation(name: "测试测试测试测试测测试测试试", uuid: uuid.v4())));
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<ConversationBloc>(context)
+        .add(const LoadConversationsEvent());
+  }
+
+  void _newConversation(String name) {
+    BlocProvider.of<ConversationBloc>(context).add(
+      AddConversationEvent(
+        Conversation(
+          name: name,
+          uuid: uuid.v4(),
+        ),
+      ),
+    );
   }
 
   @override
@@ -98,6 +123,9 @@ class _SideMenuState extends State<SideMenu> {
                         itemCount: state.conversations.length,
                         itemBuilder: (context, index) {
                           return ListTile(
+                            onTap: () {
+                              _tapConversation(index);
+                            },
                             leading: const Icon(Icons.chat),
                             title: Text(state.conversations[index].name),
                             trailing: Builder(builder: (context) {
@@ -165,13 +193,13 @@ class _SideMenuState extends State<SideMenu> {
       context: context,
       position: position,
       items: [
-        PopupMenuItem(
-          child: Text("Delete"),
+        const PopupMenuItem(
           value: "delete",
+          child: Text("Delete"),
         ),
-        PopupMenuItem(
-          child: Text("ReName"),
+        const PopupMenuItem(
           value: "rename",
+          child: Text("ReName"),
         ),
       ],
     ).then((value) {
@@ -179,6 +207,7 @@ class _SideMenuState extends State<SideMenu> {
         BlocProvider.of<ConversationBloc>(context).add(DeleteConversationEvent(
             context.read<ConversationBloc>().state.conversations[index]));
       } else if (value == "rename") {
+        _renameConversation(context, index);
         BlocProvider.of<ConversationBloc>(context).add(UpdateConversationEvent(
             context.read<ConversationBloc>().state.conversations[index]));
       }
@@ -186,6 +215,7 @@ class _SideMenuState extends State<SideMenu> {
   }
 
   void _showNewConversationDialog(BuildContext context) {
+    final TextEditingController controller = TextEditingController();
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -195,6 +225,7 @@ class _SideMenuState extends State<SideMenu> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
+                controller: controller,
                 decoration: InputDecoration(
                   labelText: 'Enter the role you expect ChatGPT to play',
                   hintText: 'Enter the role you expect ChatGPT to play',
@@ -222,7 +253,74 @@ class _SideMenuState extends State<SideMenu> {
             ),
             TextButton(
               onPressed: () {
-                _newConversation();
+                Navigator.of(context).pop();
+                _newConversation(controller.text);
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _renameConversation(BuildContext context, int index) {
+    var outerContext = context;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final TextEditingController controller = TextEditingController();
+        controller.text = outerContext
+            .read<ConversationBloc>()
+            .state
+            .conversations[index]
+            .name;
+        return AlertDialog(
+          title: const Text("Rename Conversation"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: controller,
+                decoration: InputDecoration(
+                  labelText: 'Enter the new name',
+                  hintText: 'Enter the new name',
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                ),
+                autovalidateMode: AutovalidateMode.always,
+                maxLines: null,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                BlocProvider.of<ConversationBloc>(outerContext).add(
+                  UpdateConversationEvent(
+                    Conversation(
+                      name: controller.text,
+                      uuid: outerContext
+                          .read<ConversationBloc>()
+                          .state
+                          .conversations[index]
+                          .uuid,
+                    ),
+                  ),
+                );
                 Navigator.of(context).pop();
               },
               child: const Text("OK"),
@@ -231,6 +329,15 @@ class _SideMenuState extends State<SideMenu> {
         );
       },
     );
+  }
+
+  _tapConversation(int index) {
+    String conversationUUid =
+        context.read<ConversationBloc>().state.conversations[index].uuid;
+    context
+        .read<ConversationBloc>()
+        .add(ChooseConversationEvent(conversationUUid));
+    context.read<MessageBloc>().add(LoadAllMessagesEvent(conversationUUid));
   }
 }
 
@@ -242,6 +349,7 @@ class ChatWindow extends StatefulWidget {
 }
 
 class _ChatWindowState extends State<ChatWindow> {
+  final _controller = TextEditingController();
   final _formKey = GlobalKey<FormState>(); // 定义一个 GlobalKey
   final _scrollController = ScrollController();
 
@@ -256,11 +364,29 @@ class _ChatWindowState extends State<ChatWindow> {
               child: Scrollbar(
                 controller: _scrollController,
                 thumbVisibility: true,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: 30,
-                  itemBuilder: (context, index) {
-                    return Text('消息${index + 1}');
+                child: BlocBuilder<MessageBloc, MessageState>(
+                  buildWhen: (previous, current) {
+                    return current.runtimeType == MessagesLoaded;
+                  },
+                  builder: (context, state) {
+                    if (state.runtimeType == MessagesLoaded) {
+                      var currentState = state as MessagesLoaded;
+                      return ListView.builder(
+                        controller: _scrollController,
+                        itemCount: currentState.messages.length,
+                        itemBuilder: (context, index) {
+                          return Text(currentState.messages[index].text);
+                        },
+                      );
+                    } else {
+                      return ListView.builder(
+                        controller: _scrollController,
+                        itemCount: 1,
+                        itemBuilder: (context, index) {
+                          return const Text('nothing');
+                        },
+                      );
+                    }
                   },
                 ),
               ),
@@ -272,6 +398,7 @@ class _ChatWindowState extends State<ChatWindow> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      controller: _controller,
                       decoration: InputDecoration(
                         labelText: 'Input your promote',
                         hintText: 'Input your promote here',
@@ -293,7 +420,9 @@ class _ChatWindowState extends State<ChatWindow> {
                   SizedBox(
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _sendMessage();
+                      },
                       style: ElevatedButton.styleFrom(
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -309,5 +438,20 @@ class _ChatWindowState extends State<ChatWindow> {
         ),
       ),
     );
+  }
+
+  void _sendMessage() {
+    final message = _controller.text;
+    if (message.isNotEmpty) {
+      final conversationUuid =
+          context.read<ConversationBloc>().state.currentConversationUuid;
+      final newMessage = Message(
+        conversationId: conversationUuid,
+        role: Role.user,
+        text: message,
+      );
+      context.read<MessageBloc>().add(SendMessageEvent(newMessage));
+      _formKey.currentState!.reset();
+    }
   }
 }

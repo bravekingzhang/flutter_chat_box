@@ -49,3 +49,9 @@ class UpdateConversationEvent extends ConversationEvent {
   @override
   String toString() => 'UpdateConversation { conversation: $conversation }';
 }
+
+class ChooseConversationEvent extends ConversationEvent {
+  final String conversationUUid;
+
+  const ChooseConversationEvent(this.conversationUUid);
+}
