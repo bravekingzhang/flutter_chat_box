@@ -46,6 +46,7 @@ dependencies:
     sdk: flutter
   intl: any
   font_awesome_flutter: ^10.4.0
+  sqflite: ^2.2.6
 
 dev_dependencies:
   flutter_test:
