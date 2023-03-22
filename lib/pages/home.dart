@@ -30,13 +30,24 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text(AppLocalizations.of(context)!.appTitle),
             )
           : null,
-      drawer: useTabs ? const SideMenu() : null,
+      drawer: useTabs
+          ? BlocProvider(
+              create: (context) => ConversationBloc(),
+              child: const SideMenu(),
+            )
+          : null,
       body: Stack(
         children: [
           useTabs
               ? const ChatWindow()
               : Row(
-                  children: const [SideMenu(), ChatWindow()],
+                  children: [
+                    BlocProvider(
+                      create: (context) => ConversationBloc(),
+                      child: const SideMenu(),
+                    ),
+                    const ChatWindow()
+                  ],
                 ),
         ],
       ),
@@ -52,80 +63,128 @@ class SideMenu extends StatefulWidget {
 }
 
 class _SideMenuState extends State<SideMenu> {
+  void _newConversation() {
+    BlocProvider.of<ConversationBloc>(context).add(AddConversationEvent(
+        Conversation(name: "测试测试测试测试测测试测试试", uuid: uuid.v4())));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ConversationBloc(),
-      child: BlocBuilder<ConversationBloc, ConversationState>(
-        builder: (context, state) {
-          return Container(
-            decoration: BoxDecoration(
-                color: BlocProvider.of<UserSettingCubit>(context)
-                    .state
-                    .themeData
-                    .cardColor,
-                border: const Border(right: BorderSide(width: .3))),
-            constraints: const BoxConstraints(maxWidth: 200),
-            child: Column(
-              children: [
-                state.runtimeType == ConversationInitial
-                    ? Expanded(
-                        child: Center(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              BlocProvider.of<ConversationBloc>(context).add(
-                                  AddConversationEvent(Conversation(
-                                      name: "测试", uuid: uuid.v4())));
-                            },
-                            child: const Text('Add Conversation'),
-                          ),
-                        ),
-                      )
-                    : Expanded(
-                        child: ListView.builder(
-                          itemCount: state.conversations.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text('Item $index'),
-                            );
+    return BlocBuilder<ConversationBloc, ConversationState>(
+      builder: (context, state) {
+        return Container(
+          decoration: BoxDecoration(
+              color: BlocProvider.of<UserSettingCubit>(context)
+                  .state
+                  .themeData
+                  .cardColor,
+              border: const Border(right: BorderSide(width: .3))),
+          constraints: const BoxConstraints(maxWidth: 200),
+          child: Column(
+            children: [
+              state.runtimeType == ConversationInitial
+                  ? Expanded(
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _showNewConversationDialog(context);
                           },
+                          child: const Text('Add Conversation'),
                         ),
                       ),
-                const Divider(thickness: .3),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextButton.icon(
-                        onPressed: () {
-                          EasyLoading.showInfo('还没实现');
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: state.conversations.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(state.conversations[index].name),
+                          );
                         },
-                        label: const Text("New Conversation"),
-                        icon: const Icon(Icons.add_box),
                       ),
-                      TextButton.icon(
-                        onPressed: () {
-                          EasyLoading.showInfo('还没实现');
-                        },
-                        label: const Text("Version：1.0.1"),
-                        icon: const Icon(Icons.info),
-                      ),
-                      TextButton.icon(
-                        onPressed: () {
-                          EasyLoading.showInfo('还没实现');
-                        },
-                        label: const Text("Settings"),
-                        icon: const Icon(Icons.settings),
-                      ),
-                    ],
+                    ),
+              const Divider(thickness: .3),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton.icon(
+                      onPressed: () {
+                        _showNewConversationDialog(context);
+                      },
+                      label: const Text("New Conversation"),
+                      icon: const Icon(Icons.add_box),
+                    ),
+                    TextButton.icon(
+                      onPressed: () {
+                        EasyLoading.showInfo('还没实现');
+                      },
+                      label: const Text("Version：1.0.1"),
+                      icon: const Icon(Icons.info),
+                    ),
+                    TextButton.icon(
+                      onPressed: () {
+                        EasyLoading.showInfo('还没实现');
+                      },
+                      label: const Text("Settings"),
+                      icon: const Icon(Icons.settings),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showNewConversationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("New Conversation"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Enter the role you expect ChatGPT to play',
+                  hintText: 'Enter the role you expect ChatGPT to play',
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
                   ),
-                )
-              ],
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                ),
+                autovalidateMode: AutovalidateMode.always,
+                maxLines: null,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
             ),
-          );
-        },
-      ),
+            TextButton(
+              onPressed: () {
+                _newConversation();
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
