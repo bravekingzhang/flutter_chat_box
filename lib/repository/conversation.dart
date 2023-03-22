@@ -67,11 +67,11 @@ class ConversationRepository {
         await db.execute('''
           CREATE TABLE $_tableConversationName (
             $_columnUuid TEXT PRIMARY KEY,
-            $_columnName TEXT,
+            $_columnName TEXT
           )
         ''');
         await db.execute('''
-          CREATE TABLE message (
+          CREATE TABLE $_tableMessageName (
             $_columnId INTEGER PRIMARY KEY AUTOINCREMENT,
             $_columnUuid TEXT,
             $_columnRole INTEGER,

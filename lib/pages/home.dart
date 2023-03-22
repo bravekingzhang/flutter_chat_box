@@ -3,8 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chatgpt/bloc//conversation_bloc.dart';
 import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
 import 'package:flutter_chatgpt/device/form_factor.dart';
+import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:uuid/uuid.dart';
+
+var uuid = const Uuid();
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -50,72 +54,78 @@ class SideMenu extends StatefulWidget {
 class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ConversationBloc, ConversationState>(
-      bloc: ConversationBloc(),
-      builder: (context, state) {
-        return Container(
-          decoration: BoxDecoration(
-              color: BlocProvider.of<UserSettingCubit>(context)
-                  .state
-                  .themeData
-                  .cardColor,
-              border: const Border(right: BorderSide(width: .3))),
-          constraints: const BoxConstraints(maxWidth: 200),
-          child: Column(
-            children: [
-              state.runtimeType == ConversationInitial
-                  ? Expanded(
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Text('Add Conversation'),
+    return BlocProvider(
+      create: (context) => ConversationBloc(),
+      child: BlocBuilder<ConversationBloc, ConversationState>(
+        builder: (context, state) {
+          return Container(
+            decoration: BoxDecoration(
+                color: BlocProvider.of<UserSettingCubit>(context)
+                    .state
+                    .themeData
+                    .cardColor,
+                border: const Border(right: BorderSide(width: .3))),
+            constraints: const BoxConstraints(maxWidth: 200),
+            child: Column(
+              children: [
+                state.runtimeType == ConversationInitial
+                    ? Expanded(
+                        child: Center(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              BlocProvider.of<ConversationBloc>(context).add(
+                                  AddConversationEvent(Conversation(
+                                      name: "测试", uuid: uuid.v4())));
+                            },
+                            child: const Text('Add Conversation'),
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: state.conversations.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text('Item $index'),
+                            );
+                          },
                         ),
                       ),
-                    )
-                  : Expanded(
-                      child: ListView.builder(
-                        itemCount: state.conversations.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text('Item $index'),
-                          );
+                const Divider(thickness: .3),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          EasyLoading.showInfo('还没实现');
                         },
+                        label: const Text("New Conversation"),
+                        icon: const Icon(Icons.add_box),
                       ),
-                    ),
-              const Divider(thickness: .3),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextButton.icon(
-                      onPressed: () {
-                        EasyLoading.showInfo('还没实现');
-                      },
-                      label: const Text("New Conversation"),
-                      icon: const Icon(Icons.add_box),
-                    ),
-                    TextButton.icon(
-                      onPressed: () {
-                        EasyLoading.showInfo('还没实现');
-                      },
-                      label: const Text("Version：1.0.1"),
-                      icon: const Icon(Icons.info),
-                    ),
-                    TextButton.icon(
-                      onPressed: () {
-                        EasyLoading.showInfo('还没实现');
-                      },
-                      label: const Text("Settings"),
-                      icon: const Icon(Icons.settings),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        );
-      },
+                      TextButton.icon(
+                        onPressed: () {
+                          EasyLoading.showInfo('还没实现');
+                        },
+                        label: const Text("Version：1.0.1"),
+                        icon: const Icon(Icons.info),
+                      ),
+                      TextButton.icon(
+                        onPressed: () {
+                          EasyLoading.showInfo('还没实现');
+                        },
+                        label: const Text("Settings"),
+                        icon: const Icon(Icons.settings),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

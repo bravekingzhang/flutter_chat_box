@@ -12,6 +12,8 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     on<DeleteConversationEvent>(_onDeleteConversationEvent);
 
     on<UpdateConversationEvent>(_onUpdateConversationEvent);
+
+    on<AddConversationEvent>(_onAddConversationEventEvent);
   }
 
   Future<void> _onLoadConversationsEvent(
@@ -33,5 +35,11 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     final conversations = await ConversationRepository().getConversations();
     emit(ConversationLoaded(conversations));
   }
-}
 
+  Future<void> _onAddConversationEventEvent(
+      AddConversationEvent event, Emitter<ConversationState> emit) async {
+    await ConversationRepository().addConversation(event.conversation);
+    final conversations = await ConversationRepository().getConversations();
+    emit(ConversationLoaded(conversations));
+  }
+}
