@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chatgpt/bloc/conversation_bloc.dart';
 import 'package:flutter_chatgpt/bloc/message_bloc.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ChatWindow extends StatefulWidget {
   const ChatWindow({super.key});
@@ -127,42 +128,77 @@ class _ChatWindowState extends State<ChatWindow> {
 
   Widget _buildMessageCard(Message message) {
     if (message.role == Role.user) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.blue[100],
-                borderRadius: BorderRadius.circular(8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: const [
+              FaIcon(FontAwesomeIcons.person),
+              SizedBox(
+                width: 5,
               ),
-              child: Text(
-                message.text,
-                style: const TextStyle(fontSize: 16),
+              Text("User"),
+              SizedBox(
+                width: 10,
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[100],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    message.text,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       );
     } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+      return Column(
         children: [
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(
+                width: 10,
               ),
-              child: Text(
-                message.text,
-                style: const TextStyle(fontSize: 16),
+              const FaIcon(FontAwesomeIcons.robot),
+              const SizedBox(
+                width: 5,
               ),
-            ),
+              Text(message.role == Role.system ? "System" : "assistant"),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    message.text,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       );
