@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
@@ -11,15 +13,25 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   MessageBloc() : super(MessageInitial()) {
     on<SendMessageEvent>((event, emit) async {
       emit(const MessageSending());
+      // wait for all the  state emit
+      final completer = Completer();
       try {
-        await MessageRepository().postMessage(event.message);
-        log("当前会话ID是11111   ${event.message.conversationId}");
-        final messages = await ConversationRepository()
-            .getMessagesByConversationUUid(event.message.conversationId);
-        emit(MessagesLoaded(messages));
+        MessageRepository().postMessage(event.message, (Message message) {
+          emit(MessageRelayingState(message));
+        }, (Message message) {
+          emit(MessageRelayingState(message));
+        }, () async {
+          // if streaming is done ,load all the message
+          final messages = await ConversationRepository()
+              .getMessagesByConversationUUid(event.message.conversationId);
+          emit(MessagesLoaded(messages));
+          completer.complete();
+        });
       } catch (e) {
         emit(MessageError(e.toString()));
+        completer.complete();
       }
+      await completer.future;
     });
 
     on<DeleteMessageEvent>((event, emit) async {

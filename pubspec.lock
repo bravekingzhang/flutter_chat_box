@@ -121,6 +121,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  dart_openai:
+    dependency: "direct main"
+    description:
+      name: dart_openai
+      sha256: ad579452b83b4f044ca27245ff805a7510e36623be94560517758c7d35771c9d
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.8.4"
   dart_style:
     dependency: transitive
     description:
@@ -269,6 +277,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.3"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      sha256: "6aa2946395183537c8b880962d935877325d6a09a2867c3970c05c0fed6ac482"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.13.5"
+  http_parser:
+    dependency: transitive
+    description:
+      name: http_parser
+      sha256: "2aa08ce0341cc9b354a498388e30986515406668dbcc4f7c950c3e715496693b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.2"
   hydrated_bloc:
     dependency: "direct main"
     description:

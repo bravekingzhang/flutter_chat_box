@@ -33,6 +33,11 @@ class Message {
       'text': text,
     };
   }
+
+  @override
+  String toString() {
+    return 'Message{id: $id, conversationId: $conversationId, role: $role, text: $text}';
+  }
 }
 
 enum Role {

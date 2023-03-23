@@ -43,10 +43,11 @@ class MessageLoading extends MessageState {
   List<Object> get props => [];
 }
 
-class MessageSentSuccess extends MessageState {
+/// ChatGPT steaming 回答中
+class MessageRelayingState extends MessageState {
   final Message message;
 
-  const MessageSentSuccess(this.message);
+  const MessageRelayingState(this.message);
 
   @override
   List<Object> get props => [message];

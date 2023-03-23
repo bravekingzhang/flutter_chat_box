@@ -48,6 +48,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   sqflite: ^2.2.6
   uuid: ^3.0.7
+  dart_openai: ^1.8.4
 
 dev_dependencies:
   flutter_test:
