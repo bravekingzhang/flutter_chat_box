@@ -9,7 +9,7 @@ class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
       : super(UserSettingState(
           lightTheme,
           const Locale('en'),
-          "default key",
+          "",
         )) {
     hydrate();
   }

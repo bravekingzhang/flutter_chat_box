@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:dart_openai/openai.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:flutter_chatgpt/utils/log.dart';
+import 'package:get_it/get_it.dart';
 
 class MessageRepository {
   static final MessageRepository _instance = MessageRepository._internal();
@@ -24,7 +26,7 @@ class MessageRepository {
   }
 
   void init(apiKey) {
-    OpenAI.apiKey = "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";
+    OpenAI.apiKey = GetIt.instance.get<UserSettingCubit>().state.key;
   }
 
   void _getResponseFromGpt(

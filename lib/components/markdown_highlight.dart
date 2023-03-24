@@ -39,8 +39,7 @@ class CodeElementBuilder extends MarkdownElementBuilder {
         padding: const EdgeInsets.all(8),
 
         // Specify text style
-        textStyle: TextStyle(
-          backgroundColor: Colors.grey[200],
+        textStyle: const TextStyle(
           fontFamily: 'monospace',
           fontSize: 14,
         ),

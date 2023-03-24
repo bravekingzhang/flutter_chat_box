@@ -2,5 +2,19 @@
   "appTitle": "智能助手",
   "toSecondPage": "去到第二页",
   "secondPage": "这里上第二页",
-  "countTimes":"当前的数字是："
+  "countTimes":"当前的数字是：",
+  "noConversationTips":"似乎没有会话，点击左侧快速创建一个，或简单地键入提示创建一个",
+  "newConversation":"创建新会话",
+  "renameConversation":"重命名会话",
+  "settings":"设置",
+  "theme":"切换主题",
+  "language":"切换语言",
+  "delete":"删除",
+  "reName":"重命名",
+  "inputPrompt":"请输入你的 prompt",
+  "inputPromptTips":"在这里输入你的 prompt",
+  "enterKey":"请输入你的 chatgpt key",
+  "enterKeyTips":"请输在这里输入你的 chatgpt key",
+  "ok":"确定",
+  "cancel":"取消"
 }

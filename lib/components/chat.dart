@@ -6,7 +6,7 @@ import 'package:flutter_chatgpt/bloc/message_bloc.dart';
 import 'package:flutter_chatgpt/components/markdown.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = const Uuid();
@@ -68,8 +68,9 @@ class _ChatWindowState extends State<ChatWindow> {
                       child: TextFormField(
                         controller: _controller,
                         decoration: InputDecoration(
-                          labelText: 'Input your prompt',
-                          hintText: 'Input your prompt here',
+                          labelText: AppLocalizations.of(context)!.inputPrompt,
+                          hintText:
+                              AppLocalizations.of(context)!.inputPromptTips,
                           floatingLabelBehavior: FloatingLabelBehavior.auto,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 8),
@@ -78,7 +79,6 @@ class _ChatWindowState extends State<ChatWindow> {
                             borderSide: BorderSide.none,
                           ),
                           filled: true,
-                          fillColor: Colors.grey[200],
                         ),
                         autovalidateMode: AutovalidateMode.always,
                         maxLines: null,
@@ -169,12 +169,15 @@ class _ChatWindowState extends State<ChatWindow> {
                   padding: const EdgeInsets.all(8),
                   margin: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.blue[100],
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: SelectableText(
-                    message.text,
-                    style: const TextStyle(fontSize: 16),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SelectableText(
+                        message.text,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -202,13 +205,8 @@ class _ChatWindowState extends State<ChatWindow> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Flexible(
-                child: Container(
-                  padding: const EdgeInsets.all(8),
+                child: Card(
                   margin: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
                   child: Markdown(text: message.text),
                 ),
               ),
@@ -264,7 +262,6 @@ class _ChatWindowState extends State<ChatWindow> {
                   '${sceneList[index]["description"]}',
                   style: const TextStyle(
                     fontSize: 16,
-                    color: Colors.white,
                   ),
                 ),
               ],

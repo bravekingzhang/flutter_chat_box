@@ -2,5 +2,19 @@
   "appTitle": "ChatGpt",
   "toSecondPage":"to second page",
   "secondPage":"this is the second Page",
-  "countTimes":"current total count is:"
+  "countTimes":"current total count is:",
+  "noConversationTips":"There seems to be no session, click on the left to create one quickly, or simply type prompt to create one",
+  "newConversation":"New Conversation",
+  "renameConversation":"Rename Conversation",
+  "settings":"Settings",
+  "theme":"switch theme",
+  "language":"switch language",
+  "delete":"Delete",
+  "reName":"ReName",
+  "inputPrompt":"Input your prompt",
+  "inputPromptTips":"Input your prompt here",
+  "enterKey":"Enter the chatgpt key",
+  "enterKeyTips":"Enter the chatgpt key here",
+  "ok":"OK",
+  "cancel":"Cancel"
 }

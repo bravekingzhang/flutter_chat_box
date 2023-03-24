@@ -4,7 +4,7 @@ import 'package:flutter_chatgpt/bloc/conversation_bloc.dart';
 import 'package:flutter_chatgpt/bloc/message_bloc.dart';
 import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConversationWindow extends StatefulWidget {
   const ConversationWindow({super.key});
@@ -26,14 +26,11 @@ class _ConversationWindowState extends State<ConversationWindow> {
     return BlocBuilder<ConversationBloc, ConversationState>(
       builder: (context, state) {
         return Container(
-          decoration: BoxDecoration(
-              color: BlocProvider.of<UserSettingCubit>(context)
-                  .state
-                  .themeData
-                  .cardColor,
-              border: const Border(right: BorderSide(width: .3))),
+          decoration:
+              const BoxDecoration(border: Border(right: BorderSide(width: .3))),
           constraints: const BoxConstraints(maxWidth: 300),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               state.runtimeType == ConversationInitial ||
                       state.conversations.isEmpty
@@ -82,7 +79,8 @@ class _ConversationWindowState extends State<ConversationWindow> {
                       onPressed: () {
                         _showNewConversationDialog(context);
                       },
-                      label: const Text("New Conversation"),
+                      label:
+                          Text(AppLocalizations.of(context)!.newConversation),
                       icon: const Icon(Icons.add_box),
                     ),
                     TextButton.icon(
@@ -94,7 +92,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                       onPressed: () {
                         _showSetting();
                       },
-                      label: const Text("Settings"),
+                      label: Text(AppLocalizations.of(context)!.settings),
                       icon: const Icon(Icons.settings),
                     ),
                   ],
@@ -123,13 +121,13 @@ class _ConversationWindowState extends State<ConversationWindow> {
       context: context,
       position: position,
       items: [
-        const PopupMenuItem(
+        PopupMenuItem(
           value: "delete",
-          child: Text("Delete"),
+          child: Text(AppLocalizations.of(context)!.delete),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: "rename",
-          child: Text("ReName"),
+          child: Text(AppLocalizations.of(context)!.reName),
         ),
       ],
     ).then((value) {
@@ -163,15 +161,15 @@ class _ConversationWindowState extends State<ConversationWindow> {
             .conversations[index]
             .name;
         return AlertDialog(
-          title: const Text("Rename Conversation"),
+          title: Text(AppLocalizations.of(context)!.renameConversation),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
                 controller: controller,
                 decoration: InputDecoration(
-                  labelText: 'Enter the new name',
-                  hintText: 'Enter the new name',
+                  labelText: 'Enter the new conversation name',
+                  hintText: 'Enter the new conversation name here',
                   floatingLabelBehavior: FloatingLabelBehavior.auto,
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -180,7 +178,6 @@ class _ConversationWindowState extends State<ConversationWindow> {
                     borderSide: BorderSide.none,
                   ),
                   filled: true,
-                  fillColor: Colors.grey[200],
                 ),
                 autovalidateMode: AutovalidateMode.always,
                 maxLines: null,
@@ -211,7 +208,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                 );
                 Navigator.of(context).pop();
               },
-              child: const Text("OK"),
+              child: Text(AppLocalizations.of(context)!.ok),
             ),
           ],
         );
@@ -228,5 +225,92 @@ class _ConversationWindowState extends State<ConversationWindow> {
     context.read<MessageBloc>().add(LoadAllMessagesEvent(conversationUUid));
   }
 
-  void _showSetting() {}
+  void _showSetting() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final TextEditingController controller = TextEditingController();
+        controller.text = BlocProvider.of<UserSettingCubit>(context).state.key;
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.settings),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.6,
+            height: MediaQuery.of(context).size.height * 0.4,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(AppLocalizations.of(context)!.theme),
+                    Switch(
+                      value: BlocProvider.of<UserSettingCubit>(context)
+                              .state
+                              .themeData ==
+                          darkTheme,
+                      onChanged: (value) {
+                        BlocProvider.of<UserSettingCubit>(context)
+                            .switchTheme();
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 28,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(AppLocalizations.of(context)!.language),
+                    Switch(
+                      value: BlocProvider.of<UserSettingCubit>(context)
+                              .state
+                              .locale
+                              .languageCode ==
+                          'zh',
+                      onChanged: (value) {
+                        BlocProvider.of<UserSettingCubit>(context)
+                            .switchLocale();
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 28,
+                ),
+                TextFormField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.enterKey,
+                    hintText: AppLocalizations.of(context)!.enterKeyTips,
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                  ),
+                  autovalidateMode: AutovalidateMode.always,
+                  maxLines: null,
+                  onChanged: (value) {
+                    BlocProvider.of<UserSettingCubit>(context).setKey(value);
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(AppLocalizations.of(context)!.ok),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
