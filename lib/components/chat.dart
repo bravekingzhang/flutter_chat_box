@@ -6,6 +6,10 @@ import 'package:flutter_chatgpt/bloc/message_bloc.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:uuid/uuid.dart';
+
+var uuid = const Uuid();
+
 class ChatWindow extends StatefulWidget {
   const ChatWindow({super.key});
 
@@ -30,9 +34,6 @@ class _ChatWindowState extends State<ChatWindow> {
                 controller: _scrollController,
                 thumbVisibility: true,
                 child: BlocBuilder<MessageBloc, MessageState>(
-                  buildWhen: (previous, current) {
-                    return current.runtimeType == MessagesLoaded;
-                  },
                   builder: (context, state) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       _scrollToNewMessage();
@@ -66,8 +67,8 @@ class _ChatWindowState extends State<ChatWindow> {
                       child: TextFormField(
                         controller: _controller,
                         decoration: InputDecoration(
-                          labelText: 'Input your promote',
-                          hintText: 'Input your promote here',
+                          labelText: 'Input your prompt',
+                          hintText: 'Input your prompt here',
                           floatingLabelBehavior: FloatingLabelBehavior.auto,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 8),
@@ -108,11 +109,29 @@ class _ChatWindowState extends State<ChatWindow> {
     );
   }
 
+  String _newConversation(String name, String description) {
+    var conversation = Conversation(
+      name: name,
+      description: description,
+      uuid: uuid.v4(),
+    );
+    BlocProvider.of<ConversationBloc>(context).add(
+      AddConversationEvent(
+        conversation,
+      ),
+    );
+    return conversation.uuid;
+  }
+
   void _sendMessage() {
     final message = _controller.text;
     if (message.isNotEmpty) {
-      final conversationUuid =
+      var conversationUuid =
           context.read<ConversationBloc>().state.currentConversationUuid;
+      if (conversationUuid.isEmpty) {
+        // new conversation
+        conversationUuid = _newConversation(message, message);
+      }
       final newMessage = Message(
         conversationId: conversationUuid,
         role: Role.user,
@@ -222,31 +241,36 @@ class _ChatWindowState extends State<ChatWindow> {
       crossAxisCount: 3,
       children: List.generate(
         sceneList.length,
-        (index) => Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '${sceneList[index]["title"]}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+        (index) => GestureDetector(
+          onTap: () =>
+              {_controller.text = (sceneList[index]["description"] as String)},
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: sceneList[index]["color"] as Color,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${sceneList[index]["title"]}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '${sceneList[index]["description"]}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
+                const SizedBox(height: 10),
+                Text(
+                  '${sceneList[index]["description"]}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -254,12 +278,35 @@ class _ChatWindowState extends State<ChatWindow> {
   }
 }
 
-const sceneList = [
-  {"title": "前端开发", "description": "你扮演一名技术精湛的前端开发"},
-  {"title": "后端开发", "description": "你扮演是一名技术精湛的后端开发"},
-  {"title": "决策", "description": "你扮演是一名高管，需要做出各种决策"},
-  {"title": "架构师", "description": "你扮演是一名技术精湛的架构师"},
-  {"title": "小程序开发", "description": "你扮演是一名小程序开发工程师"},
-  {"title": "重构开发", "description": "你扮演是一名重构开发工程师"},
-  {"title": "运维工程师", "description": "你扮演是一名运维工程师，需要维护系统的稳定性"},
+var sceneList = [
+  {
+    "title": "前端开发",
+    "color": Colors.blue[300],
+    "description": "需要你扮演技术精湛的前端开发工程师，解决前端问题"
+  },
+  {
+    "title": "后端开发",
+    "color": Colors.green[300],
+    "description": "需要你扮演技术精湛的后端开发工程师，解决前端问题"
+  },
+  {
+    "title": "决策",
+    "color": Colors.purple[300],
+    "description": "需要你扮演公司高管，做出各种决策"
+  },
+  {
+    "title": "架构师",
+    "color": Colors.orange[300],
+    "description": "需要你扮演技术精湛的架构师，解决架构设计问题"
+  },
+  {
+    "title": "小程序开发",
+    "color": Colors.red[300],
+    "description": "需要你扮演小程序开发工程师，解决小程序研发疑难杂症"
+  },
+  {
+    "title": "运维工程师",
+    "color": Colors.blueGrey[300],
+    "description": "需要你扮演运维工程师，需要维护系统的稳定性"
+  },
 ];

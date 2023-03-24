@@ -3,9 +3,11 @@ import 'package:sqflite/sqflite.dart';
 
 class Conversation {
   String name;
+  String description;
   String uuid;
 
-  Conversation({required this.name, required this.uuid});
+  Conversation(
+      {required this.name, required this.description, required this.uuid});
 
   Map<String, dynamic> toMap() {
     return {
@@ -98,6 +100,7 @@ class ConversationRepository {
       final name = maps[i][_columnName];
       return Conversation(
         uuid: uuid,
+        description: '',
         name: name,
       );
     });
@@ -110,16 +113,16 @@ class ConversationRepository {
       conversation.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    final randomMessage = Message(
-      text: '随机消息',
-      role: Role.system,
-      conversationId: conversation.uuid,
-    );
-    await db.insert(
-      _tableMessageName,
-      randomMessage.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    // final randomMessage = Message(
+    //   text: conversation.description,
+    //   role: Role.system,
+    //   conversationId: conversation.uuid,
+    // );
+    // await db.insert(
+    //   _tableMessageName,
+    //   randomMessage.toMap(),
+    //   conflictAlgorithm: ConflictAlgorithm.replace,
+    // );
   }
 
   Future<void> updateConversation(Conversation conversation) async {

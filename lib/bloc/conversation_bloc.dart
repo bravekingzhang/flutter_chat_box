@@ -34,20 +34,20 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       DeleteConversationEvent event, Emitter<ConversationState> emit) async {
     await ConversationRepository().deleteConversation(event.conversation.uuid);
     final conversations = await ConversationRepository().getConversations();
-    emit(ConversationLoaded(conversations, state.currentConversationUuid));
+    emit(ConversationLoaded(conversations, ""));
   }
 
   Future<void> _onUpdateConversationEvent(
       UpdateConversationEvent event, Emitter<ConversationState> emit) async {
     await ConversationRepository().updateConversation(event.conversation);
     final conversations = await ConversationRepository().getConversations();
-    emit(ConversationLoaded(conversations, state.currentConversationUuid));
+    emit(ConversationLoaded(conversations, event.conversation.uuid));
   }
 
   Future<void> _onAddConversationEventEvent(
       AddConversationEvent event, Emitter<ConversationState> emit) async {
     await ConversationRepository().addConversation(event.conversation);
     final conversations = await ConversationRepository().getConversations();
-    emit(ConversationLoaded(conversations, state.currentConversationUuid));
+    emit(ConversationLoaded(conversations, event.conversation.uuid));
   }
 }

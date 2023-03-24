@@ -5,9 +5,6 @@ import 'package:flutter_chatgpt/bloc/message_bloc.dart';
 import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:uuid/uuid.dart';
-
-var uuid = const Uuid();
 
 class ConversationWindow extends StatefulWidget {
   const ConversationWindow({super.key});
@@ -24,17 +21,6 @@ class _ConversationWindowState extends State<ConversationWindow> {
         .add(const LoadConversationsEvent());
   }
 
-  void _newConversation(String name) {
-    BlocProvider.of<ConversationBloc>(context).add(
-      AddConversationEvent(
-        Conversation(
-          name: name,
-          uuid: uuid.v4(),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ConversationBloc, ConversationState>(
@@ -49,14 +35,16 @@ class _ConversationWindowState extends State<ConversationWindow> {
           constraints: const BoxConstraints(maxWidth: 300),
           child: Column(
             children: [
-              state.runtimeType == ConversationInitial
-                  ? Expanded(
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _showNewConversationDialog(context);
-                          },
-                          child: const Text('Add Conversation'),
+              state.runtimeType == ConversationInitial ||
+                      state.conversations.isEmpty
+                  ? const Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Text(
+                            "There seems to be no session, click on the left to create one quickly, or simply type prompt to create one",
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     )
@@ -159,53 +147,10 @@ class _ConversationWindowState extends State<ConversationWindow> {
   }
 
   void _showNewConversationDialog(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("New Conversation"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: controller,
-                decoration: InputDecoration(
-                  labelText: 'Enter the role you expect ChatGPT to play',
-                  hintText: 'Enter the role you expect ChatGPT to play',
-                  floatingLabelBehavior: FloatingLabelBehavior.auto,
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                ),
-                autovalidateMode: AutovalidateMode.always,
-                maxLines: null,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _newConversation(controller.text);
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
+    context.read<ConversationBloc>().add(const ChooseConversationEvent(""));
+    context
+        .read<MessageBloc>()
+        .add(const LoadAllMessagesEvent("new conversation"));
   }
 
   void _renameConversation(BuildContext context, int index) {
@@ -257,6 +202,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                   UpdateConversationEvent(
                     Conversation(
                       name: controller.text,
+                      description: "",
                       uuid: outerContext
                           .read<ConversationBloc>()
                           .state

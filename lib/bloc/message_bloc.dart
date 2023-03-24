@@ -40,7 +40,6 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       }
       await completer.future;
     });
-
     on<DeleteMessageEvent>((event, emit) async {
       try {
         await ConversationRepository().deleteMessage(event.message.id!);
@@ -58,6 +57,9 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         final messages = await ConversationRepository()
             .getMessagesByConversationUUid(event.conversationUUid);
         emit(MessagesLoaded(messages));
+        if (messages.isEmpty) {
+          emit(MessageInitial());
+        }
       } catch (e) {
         emit(MessageError(e.toString()));
       }
