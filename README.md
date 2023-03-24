@@ -12,6 +12,13 @@ ui 结构上参考 项目 https://github.com/Bin-Huang/chatbox
 - Android✅
 - iOS✅
 
+# 使用方法
+
+release dir  可以直接下载release版本，也可以:
+
+1. clone the repository
+2. flutter pub get
+3. flutter build macos/linux/windows/android/ios
 
 # 特性展示
 
@@ -25,6 +32,9 @@ ui 结构上参考 项目 https://github.com/Bin-Huang/chatbox
 <img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG250.jpeg"   style="width: 70%;">
 <img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG251.jpeg"  style="width: 70%;">
 
+# Mobile support
+
+<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/mobile.png"  style="width: 70%;">
 
 
 # 支持特性
