@@ -10,9 +10,9 @@
 
 # 特性展示
 
-<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG249.jpeg"  width="375">
-<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG249.jpeg"  width="375">
-<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG249.jpeg"  width="375">
+<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG249.jpeg"   style="width: 70%;">
+<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG250.jpeg"   style="width: 70%;">
+<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG251.jpeg"  style="width: 70%;">
 
 # 支持特性
 
@@ -24,5 +24,14 @@
 - 主题切换
 - 统一的路由管理
 
-# 助力快速生成一个
+# 开源共建
+
+让我们一起改进，把这个App做得更加好用一些。
+
+# 给我打call
+
+
+如果你觉得对你有用，打赏我一杯咖啡。
+
+<img src="https://github.com/bravekingzhang/utools-code2flow-official/blob/main/shoukuanma.png" alt="收款码" style="width: 40%;" />
 
