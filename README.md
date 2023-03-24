@@ -34,7 +34,7 @@ release dir  可以直接下载release版本，也可以:
 
 # Mobile support
 
-<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/mobile.png"  style="width: 70%;">
+<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/mobile.png"  style="width: 40%;">
 
 
 # 支持特性
