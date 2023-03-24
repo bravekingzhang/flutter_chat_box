@@ -34,12 +34,12 @@ class _ConversationWindowState extends State<ConversationWindow> {
             children: [
               state.runtimeType == ConversationInitial ||
                       state.conversations.isEmpty
-                  ? const Expanded(
+                  ? Expanded(
                       child: Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Center(
                           child: Text(
-                            "There seems to be no session, click on the left to create one quickly, or simply type prompt to create one",
+                            AppLocalizations.of(context)!.noConversationTips,
                             textAlign: TextAlign.center,
                           ),
                         ),
