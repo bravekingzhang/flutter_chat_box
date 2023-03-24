@@ -68,6 +68,8 @@ class _ConversationWindowState extends State<ConversationWindow> {
                             onTap: () {
                               _tapConversation(index);
                             },
+                            selected: state.currentConversationUuid ==
+                                state.conversations[index].uuid,
                             leading: const Icon(Icons.chat),
                             title: Text(state.conversations[index].name),
                             trailing: Builder(builder: (context) {

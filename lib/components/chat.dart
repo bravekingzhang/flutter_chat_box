@@ -34,6 +34,9 @@ class _ChatWindowState extends State<ChatWindow> {
                     return current.runtimeType == MessagesLoaded;
                   },
                   builder: (context, state) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _scrollToNewMessage();
+                    });
                     if (state.runtimeType == MessagesLoaded) {
                       var currentState = state as MessagesLoaded;
                       return ListView.builder(
@@ -45,13 +48,7 @@ class _ChatWindowState extends State<ChatWindow> {
                         },
                       );
                     } else {
-                      return ListView.builder(
-                        controller: _scrollController,
-                        itemCount: 1,
-                        itemBuilder: (context, index) {
-                          return const Text('nothing');
-                        },
-                      );
+                      return _buildExpandEmptyListView();
                     }
                   },
                 ),
@@ -210,11 +207,59 @@ class _ChatWindowState extends State<ChatWindow> {
             value.isControlPressed) ||
         (value.isKeyPressed(LogicalKeyboardKey.enter) && value.isMetaPressed)) {
       _sendMessage();
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
     }
   }
+
+  void _scrollToNewMessage() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
+  }
+
+  Widget _buildExpandEmptyListView() {
+    return GridView.count(
+      controller: _scrollController,
+      crossAxisCount: 3,
+      children: List.generate(
+        sceneList.length,
+        (index) => Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '${sceneList[index]["title"]}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '${sceneList[index]["description"]}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
+
+const sceneList = [
+  {"title": "前端开发", "description": "你扮演一名技术精湛的前端开发"},
+  {"title": "后端开发", "description": "你扮演是一名技术精湛的后端开发"},
+  {"title": "决策", "description": "你扮演是一名高管，需要做出各种决策"},
+  {"title": "架构师", "description": "你扮演是一名技术精湛的架构师"},
+  {"title": "小程序开发", "description": "你扮演是一名小程序开发工程师"},
+  {"title": "重构开发", "description": "你扮演是一名重构开发工程师"},
+  {"title": "运维工程师", "description": "你扮演是一名运维工程师，需要维护系统的稳定性"},
+];

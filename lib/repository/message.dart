@@ -17,8 +17,7 @@ class MessageRepository {
   }
 
   void postMessage(Message message, ValueChanged<Message> onResponse,
-      ValueChanged<Message> onError, VoidCallback onSuccess) async {
-    ConversationRepository().addMessage(message);
+      ValueChanged<Message> onError, ValueChanged<Message> onSuccess) async {
     List<Message> messages = await ConversationRepository()
         .getMessagesByConversationUUid(message.conversationId);
     _getResponseFromGpt(messages, onResponse, onError, onSuccess);
@@ -32,7 +31,7 @@ class MessageRepository {
       List<Message> messages,
       ValueChanged<Message> onResponse,
       ValueChanged<Message> errorCallback,
-      VoidCallback onSuccess) {
+      ValueChanged<Message> onSuccess) {
     List<OpenAIChatCompletionChoiceMessageModel> openAIMessages = messages
         .map((message) => OpenAIChatCompletionChoiceMessageModel(
               content: message.text,
@@ -58,8 +57,7 @@ class MessageRepository {
         errorCallback(message);
       },
       onDone: () {
-        ConversationRepository().addMessage(message);
-        onSuccess();
+        onSuccess(message);
       },
     );
   }
