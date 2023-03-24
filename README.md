@@ -1,6 +1,11 @@
 # flutter_chatgpt
 
-基于一个flutter脚手架 https://github.com/bravekingzhang/flutter_template_mason ，开发的和ChatGPT聊天的App，全平台支持
+基于一个flutter脚手架 https://github.com/bravekingzhang/flutter_template_mason ，开发的一款可以和ChatGPT聊天的App！
+
+ui 结构上参考 项目 https://github.com/Bin-Huang/chatbox
+
+**全平台支持**
+
 - macOS ✅
 - Linux✅
 - Windows✅
@@ -9,6 +14,10 @@
 
 
 # 特性展示
+
+- 支持代码着色
+- 使用stream 流式 API 请求，响应比较快
+- 清爽的UI
 
 <img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG249.jpeg"   style="width: 70%;">
 <img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG250.jpeg"   style="width: 70%;">
