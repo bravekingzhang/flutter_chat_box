@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chatgpt/bloc/conversation_bloc.dart';
 import 'package:flutter_chatgpt/bloc/message_bloc.dart';
+import 'package:flutter_chatgpt/components/markdown.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -171,7 +172,7 @@ class _ChatWindowState extends State<ChatWindow> {
                     color: Colors.blue[100],
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text(
+                  child: SelectableText(
                     message.text,
                     style: const TextStyle(fontSize: 16),
                   ),
@@ -208,10 +209,7 @@ class _ChatWindowState extends State<ChatWindow> {
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text(
-                    message.text,
-                    style: const TextStyle(fontSize: 16),
-                  ),
+                  child: Markdown(text: message.text),
                 ),
               ),
             ],

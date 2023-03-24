@@ -86,15 +86,13 @@ class _ConversationWindowState extends State<ConversationWindow> {
                       icon: const Icon(Icons.add_box),
                     ),
                     TextButton.icon(
-                      onPressed: () {
-                        EasyLoading.showInfo('还没实现');
-                      },
+                      onPressed: () {},
                       label: const Text("Version：1.0.1"),
                       icon: const Icon(Icons.info),
                     ),
                     TextButton.icon(
                       onPressed: () {
-                        EasyLoading.showInfo('还没实现');
+                        _showSetting();
                       },
                       label: const Text("Settings"),
                       icon: const Icon(Icons.settings),
@@ -229,4 +227,6 @@ class _ConversationWindowState extends State<ConversationWindow> {
         .add(ChooseConversationEvent(conversationUUid));
     context.read<MessageBloc>().add(LoadAllMessagesEvent(conversationUUid));
   }
+
+  void _showSetting() {}
 }
