@@ -19,9 +19,13 @@ ui 结构上参考 项目 https://github.com/Bin-Huang/chatbox
 - 使用stream 流式 API 请求，响应比较快
 - 清爽的UI
 
+<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/20230324_203035.gif"  style="width: 90%;">
+
 <img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG249.jpeg"   style="width: 70%;">
 <img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG250.jpeg"   style="width: 70%;">
 <img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG251.jpeg"  style="width: 70%;">
+
+
 
 # 支持特性
 
