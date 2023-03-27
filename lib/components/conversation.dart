@@ -26,20 +26,24 @@ class _ConversationWindowState extends State<ConversationWindow> {
     return BlocBuilder<ConversationBloc, ConversationState>(
       builder: (context, state) {
         return Container(
-          decoration:
-              const BoxDecoration(border: Border(right: BorderSide(width: .3))),
+          decoration: BoxDecoration(
+              color: BlocProvider.of<UserSettingCubit>(context)
+                  .state
+                  .themeData
+                  .cardColor,
+              border: const Border(right: BorderSide(width: .3))),
           constraints: const BoxConstraints(maxWidth: 300),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               state.runtimeType == ConversationInitial ||
                       state.conversations.isEmpty
-                  ? Expanded(
+                  ? const Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(8.0),
                         child: Center(
                           child: Text(
-                            AppLocalizations.of(context)!.noConversationTips,
+                            "There seems to be no session, click on the left to create one quickly, or simply type prompt to create one",
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -79,8 +83,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                       onPressed: () {
                         _showNewConversationDialog(context);
                       },
-                      label:
-                          Text(AppLocalizations.of(context)!.newConversation),
+                      label: const Text("New Conversation"),
                       icon: const Icon(Icons.add_box),
                     ),
                     TextButton.icon(
@@ -92,7 +95,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                       onPressed: () {
                         _showSetting();
                       },
-                      label: Text(AppLocalizations.of(context)!.settings),
+                      label: const Text("Settings"),
                       icon: const Icon(Icons.settings),
                     ),
                   ],
@@ -121,13 +124,13 @@ class _ConversationWindowState extends State<ConversationWindow> {
       context: context,
       position: position,
       items: [
-        PopupMenuItem(
+        const PopupMenuItem(
           value: "delete",
-          child: Text(AppLocalizations.of(context)!.delete),
+          child: Text("Delete"),
         ),
-        PopupMenuItem(
+        const PopupMenuItem(
           value: "rename",
-          child: Text(AppLocalizations.of(context)!.reName),
+          child: Text("ReName"),
         ),
       ],
     ).then((value) {
@@ -161,15 +164,15 @@ class _ConversationWindowState extends State<ConversationWindow> {
             .conversations[index]
             .name;
         return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.renameConversation),
+          title: const Text("Rename Conversation"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
                 controller: controller,
                 decoration: InputDecoration(
-                  labelText: 'Enter the new conversation name',
-                  hintText: 'Enter the new conversation name here',
+                  labelText: 'Enter the new name',
+                  hintText: 'Enter the new name',
                   floatingLabelBehavior: FloatingLabelBehavior.auto,
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -208,7 +211,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                 );
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context)!.ok),
+              child: const Text("OK"),
             ),
           ],
         );
@@ -229,8 +232,12 @@ class _ConversationWindowState extends State<ConversationWindow> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final TextEditingController controller = TextEditingController();
-        controller.text = BlocProvider.of<UserSettingCubit>(context).state.key;
+        final TextEditingController controllerApiKey = TextEditingController();
+        controllerApiKey.text =
+            BlocProvider.of<UserSettingCubit>(context).state.key;
+        final TextEditingController controllerProxy = TextEditingController();
+        controllerProxy.text =
+            BlocProvider.of<UserSettingCubit>(context).state.baseUrl;
         return AlertDialog(
           title: Text(AppLocalizations.of(context)!.settings),
           content: SizedBox(
@@ -267,7 +274,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                               .state
                               .locale
                               .languageCode ==
-                          'zh',
+                          'en',
                       onChanged: (value) {
                         BlocProvider.of<UserSettingCubit>(context)
                             .switchLocale();
@@ -279,7 +286,31 @@ class _ConversationWindowState extends State<ConversationWindow> {
                   height: 28,
                 ),
                 TextFormField(
-                  controller: controller,
+                  controller: controllerProxy,
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.setProxyUrl,
+                    hintText: AppLocalizations.of(context)!.setProxyUrlTips,
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                  ),
+                  autovalidateMode: AutovalidateMode.always,
+                  maxLines: null,
+                  onChanged: (value) {
+                    BlocProvider.of<UserSettingCubit>(context)
+                        .setProxyUrl(value);
+                  },
+                ),
+                const SizedBox(
+                  height: 28,
+                ),
+                TextFormField(
+                  controller: controllerApiKey,
                   decoration: InputDecoration(
                     labelText: AppLocalizations.of(context)!.enterKey,
                     hintText: AppLocalizations.of(context)!.enterKeyTips,

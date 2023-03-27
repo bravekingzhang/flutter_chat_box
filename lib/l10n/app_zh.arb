@@ -15,6 +15,8 @@
   "inputPromptTips":"在这里输入你的 prompt",
   "enterKey":"请输入你的 chatgpt key",
   "enterKeyTips":"请输在这里输入你的 chatgpt key",
+  "setProxyUrl":"请输入代理Url",
+  "setProxyUrlTips":"请在这里输入代理url，不填默认官方",
   "ok":"确定",
   "cancel":"取消"
 }

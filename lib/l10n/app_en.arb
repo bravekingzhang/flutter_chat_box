@@ -15,6 +15,8 @@
   "inputPromptTips":"Input your prompt here",
   "enterKey":"Enter the chatgpt key",
   "enterKeyTips":"Enter the chatgpt key here",
+  "setProxyUrl":"Enter the proxy url",
+  "setProxyUrlTips":"Enter the proxy url here. If not, the default is official",
   "ok":"OK",
   "cancel":"Cancel"
 }
