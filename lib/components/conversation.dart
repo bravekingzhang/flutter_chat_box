@@ -331,7 +331,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Use Stream"),
+                    Text(AppLocalizations.of(context)!.useStreamApi),
                     Switch(
                       value: BlocProvider.of<UserSettingCubit>(context)
                           .state
@@ -349,7 +349,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Select GPT Mode"),
+                    Text(AppLocalizations.of(context)!.gptModel),
                     DropdownButton<String>(
                       value: BlocProvider.of<UserSettingCubit>(context)
                           .state
@@ -360,7 +360,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                       },
                       items: <String>[
                         'gpt-3.5-turbo',
-                        'GPT-3',
+                        'gpt-3.5-turbo-0301',
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,

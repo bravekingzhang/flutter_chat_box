@@ -18,5 +18,7 @@
   "setProxyUrl":"Enter the proxy url",
   "setProxyUrlTips":"Enter the proxy url here. If not, the default is official",
   "ok":"OK",
-  "cancel":"Cancel"
+  "cancel":"Cancel",
+  "useStreamApi":"Use Stream API",
+  "gptModel":"Select GPT Model"
 }
