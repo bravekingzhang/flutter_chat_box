@@ -7,10 +7,7 @@ part 'setting_state.dart';
 class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
   UserSettingCubit()
       : super(UserSettingState(
-          lightTheme,
-          const Locale('en'),
-          "",
-        )) {
+            lightTheme, const Locale('en'), "", "https://api.openai.com")) {
     hydrate();
   }
 
@@ -22,18 +19,24 @@ class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
     emit(UserSettingState(
         state.themeData == lightTheme ? darkTheme : lightTheme,
         state.locale,
-        state.key));
+        state.key,
+        state.baseUrl));
   }
 
   void setKey(String key) {
-    emit(UserSettingState(state.themeData, state.locale, key));
+    emit(UserSettingState(state.themeData, state.locale, key, state.baseUrl));
+  }
+
+  void setProxyUrl(String baseUrl) {
+    emit(UserSettingState(state.themeData, state.locale, state.key, baseUrl));
   }
 
   void switchLocale() {
     emit(UserSettingState(
         state.themeData,
         _parseLocale(state.locale.languageCode == 'en' ? 'zh' : 'en'),
-        state.key));
+        state.key,
+        state.baseUrl));
   }
 
   @override
@@ -41,9 +44,10 @@ class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
     bool isDark = json['user_theme_value'] as bool;
     String locale = json['user_locale_value'] as String;
     String key = json['user_key_value'] as String;
+    String baseUrl = json['user_proxy_url_value'] as String;
 
     return UserSettingState(
-        isDark ? darkTheme : lightTheme, _parseLocale(locale), key);
+        isDark ? darkTheme : lightTheme, _parseLocale(locale), key, baseUrl);
   }
 
   Locale _parseLocale(String locale) {
@@ -67,6 +71,7 @@ class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
       'user_theme_value': state.themeData == darkTheme,
       'user_locale_value': _locale2Str(state.locale),
       'user_key_value': state.key,
+      'user_proxy_url_value': state.baseUrl
     };
   }
 }

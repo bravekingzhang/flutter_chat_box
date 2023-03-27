@@ -15,7 +15,7 @@ class MessageRepository {
   }
 
   MessageRepository._internal() {
-    init("");
+    init();
   }
 
   void postMessage(Message message, ValueChanged<Message> onResponse,
@@ -25,8 +25,9 @@ class MessageRepository {
     _getResponseFromGpt(messages, onResponse, onError, onSuccess);
   }
 
-  void init(apiKey) {
+  void init() {
     OpenAI.apiKey = GetIt.instance.get<UserSettingCubit>().state.key;
+    OpenAI.baseUrl = GetIt.instance.get<UserSettingCubit>().state.baseUrl;
   }
 
   void _getResponseFromGpt(

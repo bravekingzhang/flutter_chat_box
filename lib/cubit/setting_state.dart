@@ -9,5 +9,6 @@ class UserSettingState {
   final ThemeData themeData;
   final String key;
   final Locale locale;
-  const UserSettingState(this.themeData, this.locale, this.key);
+  final String baseUrl;
+  const UserSettingState(this.themeData, this.locale, this.key, this.baseUrl);
 }
