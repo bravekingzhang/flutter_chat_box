@@ -31,7 +31,11 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         children: [
           useTabs
-              ? const ChatWindow()
+              ? Row(
+                  children: const [
+                    ChatWindow(),
+                  ],
+                )
               : Row(
                   children: const [ConversationWindow(), ChatWindow()],
                 ),
