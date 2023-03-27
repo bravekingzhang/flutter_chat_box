@@ -10,5 +10,8 @@ class UserSettingState {
   final String key;
   final Locale locale;
   final String baseUrl;
-  const UserSettingState(this.themeData, this.locale, this.key, this.baseUrl);
+  final bool useStream;
+  final String gptModel;
+  const UserSettingState(this.themeData, this.locale, this.key, this.baseUrl,
+      this.useStream, this.gptModel);
 }

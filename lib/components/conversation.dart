@@ -242,7 +242,6 @@ class _ConversationWindowState extends State<ConversationWindow> {
           title: Text(AppLocalizations.of(context)!.settings),
           content: SizedBox(
             width: MediaQuery.of(context).size.width * 0.6,
-            height: MediaQuery.of(context).size.height * 0.4,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -328,6 +327,48 @@ class _ConversationWindowState extends State<ConversationWindow> {
                   onChanged: (value) {
                     BlocProvider.of<UserSettingCubit>(context).setKey(value);
                   },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Use Stream"),
+                    Switch(
+                      value: BlocProvider.of<UserSettingCubit>(context)
+                          .state
+                          .useStream,
+                      onChanged: (value) {
+                        BlocProvider.of<UserSettingCubit>(context)
+                            .setUseStream(value);
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 28,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Select GPT Mode"),
+                    DropdownButton<String>(
+                      value: BlocProvider.of<UserSettingCubit>(context)
+                          .state
+                          .gptModel,
+                      onChanged: (String? newValue) {
+                        BlocProvider.of<UserSettingCubit>(context)
+                            .setGptModel(newValue!);
+                      },
+                      items: <String>[
+                        'gpt-3.5-turbo',
+                        'GPT-3',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
               ],
             ),
