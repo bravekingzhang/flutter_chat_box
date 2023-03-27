@@ -232,42 +232,47 @@ class _ChatWindowState extends State<ChatWindow> {
   }
 
   Widget _buildExpandEmptyListView() {
-    return GridView.count(
-      controller: _scrollController,
-      crossAxisCount: 3,
-      children: List.generate(
-        sceneList.length,
-        (index) => GestureDetector(
-          onTap: () =>
-              {_controller.text = (sceneList[index]["description"] as String)},
-          child: Container(
-            margin: const EdgeInsets.all(8),
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: sceneList[index]["color"] as Color,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '${sceneList[index]["title"]}',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  '${sceneList[index]["description"]}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          ),
+    return Expanded(
+      child: GridView.builder(
+        controller: _scrollController,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
         ),
+        itemCount: sceneList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return GestureDetector(
+            onTap: () => {
+              _controller.text = (sceneList[index]["description"] as String)
+            },
+            child: Container(
+              margin: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: sceneList[index]["color"] as Color,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${sceneList[index]["title"]}',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    '${sceneList[index]["description"]}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
