@@ -28,6 +28,8 @@ release dir  可以直接下载release版本，也可以:
 
 <img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/20230324_203035.gif"  style="width: 90%;">
 
+<img src="https://user-images.githubusercontent.com/4476322/228132297-e7ed7bb8-d4e5-4fae-9288-d3f08a3413cc.png"   style="width: 70%;">
+
 <img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG249.jpeg"   style="width: 70%;">
 <img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG250.jpeg"   style="width: 70%;">
 <img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/WechatIMG251.jpeg"  style="width: 70%;">
