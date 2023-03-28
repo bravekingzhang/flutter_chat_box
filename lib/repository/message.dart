@@ -42,7 +42,9 @@ class MessageRepository {
             ))
         .toList();
     Stream<OpenAIStreamChatCompletionModel> chatStream = OpenAI.instance.chat
-        .createStream(model: "gpt-3.5-turbo", messages: openAIMessages);
+        .createStream(
+            model: GetIt.instance.get<UserSettingCubit>().state.gptModel,
+            messages: openAIMessages);
     var message = Message(
         conversationId: messages.first.conversationId,
         text: "",
