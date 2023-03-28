@@ -13,7 +13,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   MessageBloc() : super(MessageInitial()) {
     var index = 1;
     on<SendMessageEvent>((event, emit) async {
-      emit(const MessageSending());
+      // emit(const MessageSending());
       await ConversationRepository().addMessage(event.message);
       final messages = await ConversationRepository()
           .getMessagesByConversationUUid(event.message.conversationId);
