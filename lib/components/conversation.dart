@@ -126,13 +126,13 @@ class _ConversationWindowState extends State<ConversationWindow> {
       context: context,
       position: position,
       items: [
-        const PopupMenuItem(
+        PopupMenuItem(
           value: "delete",
-          child: Text("Delete"),
+          child: Text(AppLocalizations.of(context)!.delete),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: "rename",
-          child: Text("ReName"),
+          child: Text(AppLocalizations.of(context)!.reName),
         ),
       ],
     ).then((value) {
@@ -192,7 +192,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                _showSecondConfirm();
               },
               child: const Text("Cancel"),
             ),
@@ -211,6 +211,33 @@ class _ConversationWindowState extends State<ConversationWindow> {
                     ),
                   ),
                 );
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _showSecondConfirm() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirm"),
+          content: const Text("Are you sure to cancel?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
               child: const Text("OK"),

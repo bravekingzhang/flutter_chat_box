@@ -49,8 +49,7 @@ dependencies:
   sqflite: ^2.2.6
   uuid: ^3.0.7
   dart_openai: ^1.8.4
-  flutter_markdown: ^0.6.14
-  flutter_highlight: ^0.7.0
+  markdown_widget: ^2.1.0
 
 dev_dependencies:
   flutter_test:

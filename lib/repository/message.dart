@@ -34,12 +34,26 @@ class MessageRepository {
       ValueChanged<Message> onResponse,
       ValueChanged<Message> errorCallback,
       ValueChanged<Message> onSuccess) async {
-    List<OpenAIChatCompletionChoiceMessageModel> openAIMessages = messages
-        .map((message) => OpenAIChatCompletionChoiceMessageModel(
-              content: message.text,
-              role: message.role.toString().split('.').last,
-            ))
-        .toList();
+    List<OpenAIChatCompletionChoiceMessageModel> openAIMessages = [];
+    //将messages反转
+    messages = messages.reversed.toList();
+    while (true) {
+      // 将messages里面的每条消息的内容取出来拼接在一起
+      String content = "";
+      for (Message message in messages) {
+        content = content + message.text;
+        if (content.length < 1800) {
+          // 插入到 openAIMessages 第一个位置
+          openAIMessages.insert(
+              0,
+              OpenAIChatCompletionChoiceMessageModel(
+                content: message.text,
+                role: message.role.toString().split('.').last,
+              ));
+        }
+      }
+      break;
+    }
     var message = Message(
         conversationId: messages.first.conversationId,
         text: "",

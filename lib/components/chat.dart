@@ -205,7 +205,7 @@ class _ChatWindowState extends State<ChatWindow> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Flexible(
+              Expanded(
                 child: Card(
                   margin: const EdgeInsets.all(8),
                   child: Markdown(text: message.text),
@@ -327,26 +327,31 @@ var sceneList = [
   {
     "title": "后端开发",
     "color": Colors.green[300],
-    "description": "需要你扮演技术精湛的后端开发工程师，解决前端问题"
+    "description": "需要你扮演技术精湛的后端开发工程师，解决后端问题"
   },
   {
-    "title": "决策",
+    "title": "数据分析师",
     "color": Colors.purple[300],
-    "description": "需要你扮演公司高管，做出各种决策"
+    "description": "需要你扮演数据分析师，解决数据分析问题"
   },
   {
-    "title": "架构师",
+    "title": "测试工程师",
     "color": Colors.orange[300],
-    "description": "需要你扮演技术精湛的架构师，解决架构设计问题"
-  },
-  {
-    "title": "小程序开发",
-    "color": Colors.red[300],
-    "description": "需要你扮演小程序开发工程师，解决小程序研发疑难杂症"
+    "description": "需要你扮演测试工程师，解决测试问题"
   },
   {
     "title": "运维工程师",
-    "color": Colors.blueGrey[300],
-    "description": "需要你扮演运维工程师，需要维护系统的稳定性"
+    "color": Colors.red[300],
+    "description": "需要你扮演运维工程师，解决运维问题"
   },
+  {
+    "title": "产品经理",
+    "color": Colors.blueGrey[300],
+    "description": "需要你扮演产品经理，解决产品问题"
+  },
+  {
+    "title": "UI设计师",
+    "color": Colors.pink[300],
+    "description": "需要你扮演UI设计师，解决UI设计问题"
+  }
 ];

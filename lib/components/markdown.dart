@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_chatgpt/components/markdown_highlight.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_chatgpt/components/code_wrapper.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 
 class Markdown extends StatelessWidget {
   final String text;
@@ -9,20 +8,23 @@ class Markdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Clipboard.setData(ClipboardData(text: text));
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Copied to clipboard')),
-        );
-      },
-      child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          child: MarkdownBody(data: text, builders: {
-            'code': CodeElementBuilder(context),
-          }),
-        ),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final config =
+        isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
+    codeWrapper(child, text) => CodeWrapperWidget(child: child, text: text);
+    return SelectionArea(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: MarkdownGenerator(
+              config: config.copy(configs: [
+                isDark
+                    ? PreConfig.darkConfig.copy(wrapper: codeWrapper)
+                    : const PreConfig().copy(wrapper: codeWrapper)
+              ]),
+            ).buildWidgets(text)),
       ),
     );
   }
