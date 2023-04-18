@@ -22,7 +22,12 @@ class Markdown extends StatelessWidget {
               config: config.copy(configs: [
                 isDark
                     ? PreConfig.darkConfig.copy(wrapper: codeWrapper)
-                    : const PreConfig().copy(wrapper: codeWrapper)
+                    : const PreConfig().copy(wrapper: codeWrapper),
+                TableConfig(
+                    wrapper: (table) => SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: table,
+                        )),
               ]),
             ).buildWidgets(text)),
       ),
