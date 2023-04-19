@@ -391,8 +391,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                   const SizedBox(
                     height: 28,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Wrap(
                     children: [
                       Text(AppLocalizations.of(context)!.gptModel),
                       DropdownButton<String>(
