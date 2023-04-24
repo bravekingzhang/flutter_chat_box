@@ -1,0 +1,81 @@
+name: flutter-cli
+# You may pin to the exact commit or the version.
+# uses: steebchen/flutter@55019e0f56278a7c84949e8e17c66e8f79d67290
+uses: steebchen/flutter@v1.1.0
+
+on: push
+name: build and test app
+
+jobs:
+  build-and-test:
+    name: build and test app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: install dependencies
+        uses: steebchen/flutter@v1.1.0
+        with:
+          args: pub get
+
+      - name: run tests
+        uses: steebchen/flutter@v1.1.0
+        with:
+          args: test
+
+      - name: build apk
+        uses: steebchen/flutter@v1.1.0
+        with:
+          args: build apk --release
+
+  build-ios:
+    name: Build iOS app
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          architecture: x64
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build ios --release --no-codesign
+
+  build-windows:
+    name: Build Windows app
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'beta'
+      - run: flutter config --enable-windows-desktop
+      - run: flutter build windows
+
+  build-macos:
+    name: Build macOS app
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          architecture: x64
+      - run: flutter config --enable-macos-desktop
+      - run: flutter build macos
+
+  build-cache:
+    name: Build cache
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:'
+          # optional, change this to force refresh cache
+          cache-path: ${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:
+          # optional, change this to specify the cache path
+          architecture: x64 # optional, x64 or arm64
+      - run: flutter --version
