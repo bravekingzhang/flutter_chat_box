@@ -50,6 +50,8 @@ dependencies:
   uuid: ^3.0.7
   dart_openai: ^1.8.4
   markdown_widget: ^2.1.0
+  flutter_math_fork: ^0.6.3+1
+  markdown: ^7.0.2
 
 dev_dependencies:
   flutter_test:
