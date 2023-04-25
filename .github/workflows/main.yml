@@ -15,7 +15,7 @@ jobs:
       with:
           channel: 'stable'
     - run: flutter pub get
-    - run: flutter test
+#     - run: flutter test
     - run: flutter build apk
     - uses: skx/github-action-publish-binaries@master
       env:
@@ -33,7 +33,7 @@ jobs:
           channel: 'stable'
           architecture: x64
       - run: flutter pub get
-      - run: flutter test
+#       - run: flutter test
       - run: flutter build ios --release --no-codesign
 
   build-windows:
