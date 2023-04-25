@@ -330,9 +330,13 @@ class _ConversationWindowState extends State<ConversationWindow> {
                     ),
                     autovalidateMode: AutovalidateMode.always,
                     maxLines: null,
-                    onChanged: (value) {
+                    onEditingComplete: () {
                       BlocProvider.of<UserSettingCubit>(context)
-                          .setProxyUrl(value);
+                          .setProxyUrl(controllerProxy.text);
+                    },
+                    onFieldSubmitted: (value) {
+                      BlocProvider.of<UserSettingCubit>(context)
+                          .setProxyUrl(controllerProxy.text);
                     },
                   ),
                   const SizedBox(
@@ -365,8 +369,13 @@ class _ConversationWindowState extends State<ConversationWindow> {
                     ),
                     autovalidateMode: AutovalidateMode.always,
                     maxLines: 1,
-                    onChanged: (value) {
-                      BlocProvider.of<UserSettingCubit>(context).setKey(value);
+                    onEditingComplete: () {
+                      BlocProvider.of<UserSettingCubit>(context)
+                          .setKey(controllerApiKey.text);
+                    },
+                    onFieldSubmitted: (value) {
+                      BlocProvider.of<UserSettingCubit>(context)
+                          .setKey(controllerApiKey.text);
                     },
                     obscureText: _isObscure,
                   ),
@@ -420,6 +429,10 @@ class _ConversationWindowState extends State<ConversationWindow> {
             actions: [
               TextButton(
                 onPressed: () {
+                  BlocProvider.of<UserSettingCubit>(context)
+                      .setProxyUrl(controllerProxy.text);
+                  BlocProvider.of<UserSettingCubit>(context)
+                      .setKey(controllerApiKey.text);
                   Navigator.of(context).pop();
                 },
                 child: Text(AppLocalizations.of(context)!.ok),
