@@ -4,7 +4,7 @@ on: push
 
 jobs:
   build-and-test:
-    name: build and test app
+    name: build Android
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
