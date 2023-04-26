@@ -20,7 +20,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: "flutter_chatgpt/build/app/outputs/apk/release/app-release.apk"
+          args: "build/app/outputs/apk/release/app-release.apk"
 
   build-ios:
     name: Build iOS app
@@ -37,7 +37,7 @@ jobs:
       - uses: actions/upload-artifact@v2.2.4
         with:
           name: flutter_chat_box.ipa
-          path: build/ios/Release-iphoneos/Runner.app
+          path: flutter_chatgpt/build/ios/Release-iphoneos/Runner.app
 
   # build-windows:
   #   name: Build Windows app
@@ -64,4 +64,4 @@ jobs:
       - uses: actions/upload-artifact@v2.2.4
         with:
           name: flutter_chat_box.ipa
-          path: build/macos/Build/Products/Release/flutter_chatgpt.app"
+          path: flutter_chatgpt/build/macos/Build/Products/Release/flutter_chatgpt.app"
