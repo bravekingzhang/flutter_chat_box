@@ -59,6 +59,10 @@ release dir 可以直接下载 release 版本，也可以:
 
 让我们一起改进，把这个 App 做得更加好用一些。
 
+# 加入群聊
+
+<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/qunliao.pic.jpg"  style="width: 50%;">
+
 # 给我打 call
 
 如果你觉得对你有用，就请我一杯咖啡。
