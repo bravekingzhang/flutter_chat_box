@@ -38,7 +38,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: "build/ios/iphoneos/Runner.app"
+          args: "build/ios/Release-iphoneos/Runner.app"
 
   # build-windows:
   #   name: Build Windows app
