@@ -4,7 +4,6 @@ on: push
 jobs:
   build-Android:
     name: build Android
-    needs: [create_release]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,7 +20,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          releaseId: ${{ needs.create_release.outputs.id }}
+          releaseId: 1.1.0
           args: "build/app/outputs/apk/release/*.apk"
 
   build-ios:
