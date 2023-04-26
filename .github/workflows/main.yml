@@ -20,7 +20,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: "build/app/outputs/apk/release/app-release.apk"
+          args: "flutter_chatgpt/build/app/outputs/apk/release/app-release.apk"
 
   build-ios:
     name: Build iOS app
@@ -34,11 +34,10 @@ jobs:
       - run: flutter pub get
       #       - run: flutter test
       - run: flutter build ios --release --no-codesign
-      - uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v2.2.4
         with:
-          args: "build/ios/Release-iphoneos/Runner.app"
+          name: flutter_chat_box.ipa
+          path: build/ios/Release-iphoneos/Runner.app
 
   # build-windows:
   #   name: Build Windows app
@@ -62,8 +61,7 @@ jobs:
           architecture: x64
       - run: flutter config --enable-macos-desktop
       - run: flutter build macos
-      - uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v2.2.4
         with:
-          args: "build/macos/Build/Products/Release/flutter_chatgpt.app"
+          name: flutter_chat_box.ipa
+          path: build/macos/Build/Products/Release/flutter_chatgpt.app"
