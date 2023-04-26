@@ -4,6 +4,7 @@ on: push
 jobs:
   build-Android:
     name: build Android
+    needs: [create_release]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,7 +21,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: "build/app/outputs/apk/release/app-release.apk"
+          releaseId: ${{ needs.create_release.outputs.id }}
+          args: "build/app/outputs/apk/release/*.apk"
 
   build-ios:
     name: Build iOS app
@@ -37,7 +39,7 @@ jobs:
       - uses: actions/upload-artifact@v2.2.4
         with:
           name: flutter_chat_box.ipa
-          path: flutter_chatgpt/build/ios/Release-iphoneos/Runner.app
+          path: flutter_chatgpt/build/ios/Release-iphoneos/*.app
 
   # build-windows:
   #   name: Build Windows app
@@ -63,5 +65,5 @@ jobs:
       - run: flutter build macos
       - uses: actions/upload-artifact@v2.2.4
         with:
-          name: flutter_chat_box.ipa
-          path: flutter_chatgpt/build/macos/Build/Products/Release/flutter_chatgpt.app"
+          name: flutter_chat_box.app
+          path: flutter_chatgpt/build/macos/Build/Products/Release/*.app"
