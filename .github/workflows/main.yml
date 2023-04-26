@@ -1,27 +1,26 @@
 name: flutter-cli
 on: push
 
-
 jobs:
   build-Android:
     name: build Android
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-java@v1
-      with:
-        java-version: '12.x'
-    - uses: subosito/flutter-action@v2
-      with:
-          channel: 'stable'
-    - run: flutter pub get
-#     - run: flutter test
-    - run: flutter build apk
-    - uses: skx/github-action-publish-binaries@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        args: 'build/app/outputs/apk/release/app-release.apk'
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+      - run: flutter pub get
+      #     - run: flutter test
+      - run: flutter build apk
+      - uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: "build/app/outputs/apk/release/app-release.apk"
 
   build-ios:
     name: Build iOS app
@@ -30,22 +29,27 @@ jobs:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
           architecture: x64
       - run: flutter pub get
-#       - run: flutter test
+      #       - run: flutter test
       - run: flutter build ios --release --no-codesign
-
-  build-windows:
-    name: Build Windows app
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+      - uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          channel: 'beta'
-      - run: flutter config --enable-windows-desktop
-      - run: flutter build windows
+          args: "build/ios/iphoneos/Runner.app"
+
+  # build-windows:
+  #   name: Build Windows app
+  #   runs-on: windows-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         channel: "beta"
+  #     - run: flutter config --enable-windows-desktop
+  #     - run: flutter build windows
 
   build-macos:
     name: Build macOS app
@@ -54,9 +58,12 @@ jobs:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
           architecture: x64
       - run: flutter config --enable-macos-desktop
       - run: flutter build macos
-      
-
+      - uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: "build/macos/Build/Products/Release/flutter_chatgpt.app"
