@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:dart_openai/openai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
@@ -45,11 +43,12 @@ class MessageRepository {
         if (content.length < 1800) {
           // 插入到 openAIMessages 第一个位置
           openAIMessages.insert(
-              0,
-              OpenAIChatCompletionChoiceMessageModel(
-                content: message.text,
-                role: message.role.toString().split('.').last,
-              ));
+            0,
+            OpenAIChatCompletionChoiceMessageModel(
+              content: message.text,
+              role: message.role.asOpenAIChatMessageRole,
+            ),
+          );
         }
       }
       break;

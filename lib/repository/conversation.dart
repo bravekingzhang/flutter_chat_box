@@ -1,3 +1,4 @@
+import 'package:dart_openai/openai.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -46,6 +47,19 @@ enum Role {
   system,
   user,
   assistant,
+}
+
+extension Convert on Role {
+  OpenAIChatMessageRole get asOpenAIChatMessageRole {
+    switch (this) {
+      case Role.assistant:
+        return OpenAIChatMessageRole.assistant;
+      case Role.system:
+        return OpenAIChatMessageRole.system;
+      case Role.user:
+        return OpenAIChatMessageRole.user;
+    }
+  }
 }
 
 class ConversationRepository {
