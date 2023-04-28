@@ -47,6 +47,9 @@ dependencies:
   intl: any
   font_awesome_flutter: ^10.4.0
   sqflite: ^2.2.6
+  sqflite_common_ffi:
+  path:
+  dart_printf: ^0.5.0
   uuid: ^3.0.7
   dart_openai: ^1.8.4
   markdown_widget: ^2.1.0

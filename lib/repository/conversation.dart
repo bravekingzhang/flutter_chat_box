@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:dart_openai/openai.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:flutter/widgets.dart';
 
 class Conversation {
   String name;
@@ -81,6 +85,13 @@ class ConversationRepository {
   }
 
   Future<Database> _getDb() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    if (Platform.isWindows || Platform.isLinux) {
+      // Initialize FFI
+      sqfliteFfiInit();
+      // Change the default factory
+      databaseFactory = databaseFactoryFfi;
+    }
     if (_database == null) {
       final String path = join(await getDatabasesPath(), 'chatgpt.db');
       _database = await openDatabase(path, version: 1,
