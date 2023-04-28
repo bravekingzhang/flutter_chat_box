@@ -6,8 +6,8 @@ import 'package:flutter_chatgpt/bloc/message_bloc.dart';
 import 'package:flutter_chatgpt/components/markdown.dart';
 import 'package:flutter_chatgpt/device/form_factor.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = const Uuid();
@@ -261,14 +261,20 @@ class _ChatWindowState extends State<ChatWindow> {
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    '${sceneList[index]["description"]}',
-                    style: const TextStyle(
-                      fontSize: 16,
+                  Expanded(
+                    child: Text(
+                      '${sceneList[index]["description"]}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                      overflow: TextOverflow.fade,
+                      maxLines: 3,
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -322,7 +328,8 @@ var sceneList = [
   {
     "title": "前端开发",
     "color": Colors.blue[300],
-    "description": "需要你扮演技术精湛的前端开发工程师，解决前端问题"
+    "description":
+        "需要你扮演技术精湛的前端开发工程师，解决前端问题需要你扮演技术精湛的前端开发工程师，解决前端问题需要你扮演技术精湛的前端开发工程师，解决前端问题需要你扮演技术精湛的前端开发工程师，解决前端问题"
   },
   {
     "title": "后端开发",
