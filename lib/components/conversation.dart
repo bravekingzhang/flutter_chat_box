@@ -270,160 +270,166 @@ class _ConversationWindowState extends State<ConversationWindow> {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             title: Text(AppLocalizations.of(context)!.settings),
-            content: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.6,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(AppLocalizations.of(context)!.theme),
-                      Switch(
-                        value: BlocProvider.of<UserSettingCubit>(context)
-                                .state
-                                .themeData ==
-                            darkTheme,
-                        onChanged: (value) {
-                          BlocProvider.of<UserSettingCubit>(context)
-                              .switchTheme();
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 28,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(AppLocalizations.of(context)!.language),
-                      Switch(
-                        value: BlocProvider.of<UserSettingCubit>(context)
-                                .state
-                                .locale
-                                .languageCode ==
-                            'zh',
-                        onChanged: (value) {
-                          BlocProvider.of<UserSettingCubit>(context)
-                              .switchLocale();
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 28,
-                  ),
-                  TextFormField(
-                    controller: controllerProxy,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.setProxyUrl,
-                      hintText: AppLocalizations.of(context)!.setProxyUrlTips,
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                    ),
-                    autovalidateMode: AutovalidateMode.always,
-                    maxLines: null,
-                    onEditingComplete: () {
-                      BlocProvider.of<UserSettingCubit>(context)
-                          .setProxyUrl(controllerProxy.text);
-                    },
-                    onFieldSubmitted: (value) {
-                      BlocProvider.of<UserSettingCubit>(context)
-                          .setProxyUrl(controllerProxy.text);
-                    },
-                  ),
-                  const SizedBox(
-                    height: 28,
-                  ),
-                  TextFormField(
-                    controller: controllerApiKey,
-                    decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.enterKey,
-                      hintText: AppLocalizations.of(context)!.enterKeyTips,
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          Icons.remove_red_eye,
-                          color: _isObscure ? Colors.grey : Colors.blue,
+            content: SingleChildScrollView(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.6,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(AppLocalizations.of(context)!.theme),
+                        Switch(
+                          value: BlocProvider.of<UserSettingCubit>(context)
+                                  .state
+                                  .themeData ==
+                              darkTheme,
+                          onChanged: (value) {
+                            BlocProvider.of<UserSettingCubit>(context)
+                                .switchTheme();
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _isObscure = !_isObscure;
-                          });
-                        },
-                      ),
+                      ],
                     ),
-                    autovalidateMode: AutovalidateMode.always,
-                    maxLines: 1,
-                    onEditingComplete: () {
-                      BlocProvider.of<UserSettingCubit>(context)
-                          .setKey(controllerApiKey.text);
-                    },
-                    onFieldSubmitted: (value) {
-                      BlocProvider.of<UserSettingCubit>(context)
-                          .setKey(controllerApiKey.text);
-                    },
-                    obscureText: _isObscure,
-                  ),
-                  const SizedBox(
-                    height: 28,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(AppLocalizations.of(context)!.useStreamApi),
-                      Switch(
-                        value: BlocProvider.of<UserSettingCubit>(context)
-                            .state
-                            .useStream,
-                        onChanged: (value) {
-                          BlocProvider.of<UserSettingCubit>(context)
-                              .setUseStream(value);
-                        },
+                    const SizedBox(
+                      height: 28,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(AppLocalizations.of(context)!.language),
+                        Switch(
+                          value: BlocProvider.of<UserSettingCubit>(context)
+                                  .state
+                                  .locale
+                                  .languageCode ==
+                              'zh',
+                          onChanged: (value) {
+                            BlocProvider.of<UserSettingCubit>(context)
+                                .switchLocale();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 28,
+                    ),
+                    TextFormField(
+                      controller: controllerProxy,
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.setProxyUrl,
+                        hintText: AppLocalizations.of(context)!.setProxyUrlTips,
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 28,
-                  ),
-                  Wrap(
-                    children: [
-                      Text(AppLocalizations.of(context)!.gptModel),
-                      DropdownButton<String>(
-                        value: BlocProvider.of<UserSettingCubit>(context)
-                            .state
-                            .gptModel,
-                        onChanged: (String? newValue) {
-                          BlocProvider.of<UserSettingCubit>(context)
-                              .setGptModel(newValue!);
-                        },
-                        items: <String>[
-                          'gpt-3.5-turbo',
-                          'gpt-3.5-turbo-0301',
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
+                      autovalidateMode: AutovalidateMode.always,
+                      maxLines: null,
+                      onEditingComplete: () {
+                        BlocProvider.of<UserSettingCubit>(context)
+                            .setProxyUrl(controllerProxy.text);
+                      },
+                      onFieldSubmitted: (value) {
+                        BlocProvider.of<UserSettingCubit>(context)
+                            .setProxyUrl(controllerProxy.text);
+                      },
+                    ),
+                    const SizedBox(
+                      height: 28,
+                    ),
+                    TextFormField(
+                      controller: controllerApiKey,
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.enterKey,
+                        hintText: AppLocalizations.of(context)!.enterKeyTips,
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            Icons.remove_red_eye,
+                            color: _isObscure ? Colors.grey : Colors.blue,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                        ),
                       ),
-                    ],
-                  ),
-                ],
+                      autovalidateMode: AutovalidateMode.always,
+                      maxLines: 1,
+                      onEditingComplete: () {
+                        BlocProvider.of<UserSettingCubit>(context)
+                            .setKey(controllerApiKey.text);
+                      },
+                      onFieldSubmitted: (value) {
+                        BlocProvider.of<UserSettingCubit>(context)
+                            .setKey(controllerApiKey.text);
+                      },
+                      obscureText: _isObscure,
+                    ),
+                    const SizedBox(
+                      height: 28,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(AppLocalizations.of(context)!.useStreamApi),
+                        Switch(
+                          value: BlocProvider.of<UserSettingCubit>(context)
+                              .state
+                              .useStream,
+                          onChanged: (value) {
+                            BlocProvider.of<UserSettingCubit>(context)
+                                .setUseStream(value);
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 28,
+                    ),
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Text(AppLocalizations.of(context)!.gptModel),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        DropdownButton<String>(
+                          value: BlocProvider.of<UserSettingCubit>(context)
+                              .state
+                              .gptModel,
+                          onChanged: (String? newValue) {
+                            BlocProvider.of<UserSettingCubit>(context)
+                                .setGptModel(newValue!);
+                          },
+                          items: <String>[
+                            'gpt-3.5-turbo',
+                            'gpt-3.5-turbo-0301',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             actions: [
