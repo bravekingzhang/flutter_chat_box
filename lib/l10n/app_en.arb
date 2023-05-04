@@ -20,5 +20,6 @@
   "ok": "OK",
   "cancel": "Cancel",
   "useStreamApi": "Use Stream API",
-  "gptModel": "Select GPT Model"
+  "gptModel": "Select GPT Model",
+  "llmHint": "Select LLM Model"
 }

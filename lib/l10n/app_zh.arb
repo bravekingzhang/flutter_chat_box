@@ -20,5 +20,6 @@
   "ok": "确定",
   "cancel": "取消",
   "useStreamApi": "使用流式(Stream) API",
-  "gptModel": "选择 GPT Model"
+  "gptModel": "选择 GPT Model",
+  "llmHint": "选择大语言模型"
 }

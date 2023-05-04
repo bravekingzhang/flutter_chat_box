@@ -333,6 +333,39 @@ class _ConversationWindowState extends State<ConversationWindow> {
                     const SizedBox(
                       height: 28,
                     ),
+                    DropdownButtonFormField(
+                      value:
+                          BlocProvider.of<UserSettingCubit>(context).state.llm,
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.llmHint,
+                        hintText: AppLocalizations.of(context)!.llmHint,
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                      ),
+                      items: <String>['OpenAI', 'ChatGlm', 'IF']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue == null) return;
+                        BlocProvider.of<UserSettingCubit>(context)
+                            .setLlm(newValue);
+                      },
+                    ),
+                    const SizedBox(
+                      height: 28,
+                    ),
                     TextFormField(
                       controller: controllerApiKey,
                       decoration: InputDecoration(
