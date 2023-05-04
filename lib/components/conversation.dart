@@ -260,6 +260,36 @@ class _ConversationWindowState extends State<ConversationWindow> {
   void _showSetting(BuildContext context) {
     final TextEditingController controllerApiKey = TextEditingController();
     final TextEditingController controllerProxy = TextEditingController();
+    List<Widget> chatGlMModelSettings = [
+      const SizedBox(
+        height: 28,
+      ),
+      TextFormField(
+        controller: controllerApiKey,
+        decoration: InputDecoration(
+          labelText: AppLocalizations.of(context)!.gmlBaseUrl,
+          hintText: AppLocalizations.of(context)!.gmlBaseUrl,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: BorderSide.none,
+          ),
+          filled: true,
+        ),
+        autovalidateMode: AutovalidateMode.always,
+        maxLines: 1,
+        onEditingComplete: () {
+          BlocProvider.of<UserSettingCubit>(context)
+              .setKey(controllerApiKey.text);
+        },
+        onFieldSubmitted: (value) {
+          BlocProvider.of<UserSettingCubit>(context)
+              .setKey(controllerApiKey.text);
+        },
+      ),
+    ];
     List<Widget> openAiModelSettings = [
       const SizedBox(
         height: 28,
@@ -462,6 +492,10 @@ class _ConversationWindowState extends State<ConversationWindow> {
           if (BlocProvider.of<UserSettingCubit>(context).state.llm ==
               "OpenAI") {
             children.addAll(openAiModelSettings);
+          }
+          if (BlocProvider.of<UserSettingCubit>(context).state.llm ==
+              "ChatGlm") {
+            children.addAll(chatGlMModelSettings);
           }
           return AlertDialog(
             title: Text(AppLocalizations.of(context)!.settings),

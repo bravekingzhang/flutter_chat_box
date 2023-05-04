@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
 import 'package:flutter_chatgpt/data/llm.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
+import 'package:get_it/get_it.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -15,10 +17,17 @@ class ChatGlM extends LLM {
     var prompt = messageToBeSend.text;
     var history = messages.length >= 2 ? collectHistory(messages) : [];
     var body = {'prompt': prompt, 'history': history.isEmpty ? [] : history};
-    final response = await http.post(
-        Uri.parse('https://eafd-124-65-196-6.ngrok-free.app/'),
-        body: json.encode(body),
-        headers: {'Content-Type': 'application/json'});
+    var glmBaseUrl = GetIt.instance.get<UserSettingCubit>().state.glmBaseUrl;
+    if (glmBaseUrl.isEmpty) {
+      errorCallback(Message(
+        text: "glm baseUrl is empty,please set you glmBaseUrl first",
+        conversationId: messageToBeSend.conversationId,
+        role: Role.assistant,
+      ));
+      return;
+    }
+    final response = await http.post(Uri.parse(glmBaseUrl),
+        body: json.encode(body), headers: {'Content-Type': 'application/json'});
     if (response.statusCode == 200) {
       var jsonObj = jsonDecode(utf8.decode(response.bodyBytes));
 

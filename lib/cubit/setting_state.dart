@@ -13,6 +13,7 @@ class UserSettingState {
   final bool useStream;
   final String gptModel;
   final String llm; //大语言模型，OpenAi，ChatGlm，IF
+  final String glmBaseUrl;
   const UserSettingState(this.themeData, this.locale, this.key, this.baseUrl,
-      this.useStream, this.llm, this.gptModel);
+      this.useStream, this.llm, this.gptModel, this.glmBaseUrl);
 }

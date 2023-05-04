@@ -21,5 +21,6 @@
   "cancel": "Cancel",
   "useStreamApi": "Use Stream API",
   "gptModel": "Select GPT Model",
-  "llmHint": "Select LLM Model"
+  "llmHint": "Select LLM Model",
+  "gmlBaseUrl": "Please input chatglm base url"
 }

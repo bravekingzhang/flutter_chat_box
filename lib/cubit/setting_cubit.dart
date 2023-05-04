@@ -6,8 +6,15 @@ part 'setting_state.dart';
 
 class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
   UserSettingCubit()
-      : super(UserSettingState(lightTheme, const Locale('en'), "",
-            "https://api.openai-proxy.com", false, "OpenAI", "gpt-3.5-turbo")) {
+      : super(UserSettingState(
+            lightTheme,
+            const Locale('en'),
+            "",
+            "https://api.openai-proxy.com",
+            false,
+            "OpenAI",
+            "gpt-3.5-turbo",
+            "")) {
     hydrate();
   }
 
@@ -23,17 +30,18 @@ class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
         state.baseUrl,
         state.useStream,
         state.llm,
-        state.gptModel));
+        state.gptModel,
+        state.glmBaseUrl));
   }
 
   void setKey(String key) {
     emit(UserSettingState(state.themeData, state.locale, key, state.baseUrl,
-        state.useStream, state.llm, state.gptModel));
+        state.useStream, state.llm, state.gptModel, state.glmBaseUrl));
   }
 
   void setProxyUrl(String baseUrl) {
     emit(UserSettingState(state.themeData, state.locale, state.key, baseUrl,
-        state.useStream, state.llm, state.gptModel));
+        state.useStream, state.llm, state.gptModel, state.glmBaseUrl));
   }
 
   void switchLocale() {
@@ -44,22 +52,30 @@ class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
         state.baseUrl,
         state.useStream,
         state.llm,
-        state.gptModel));
+        state.gptModel,
+        state.glmBaseUrl));
   }
 
   void setUseStream(bool useStream) {
     emit(UserSettingState(state.themeData, state.locale, state.key,
-        state.baseUrl, useStream, state.llm, state.gptModel));
+        state.baseUrl, useStream, state.llm, state.gptModel, state.glmBaseUrl));
   }
 
   void setGptModel(String value) {
     emit(UserSettingState(state.themeData, state.locale, state.key,
-        state.baseUrl, state.useStream, state.llm, value));
+        state.baseUrl, state.useStream, state.llm, value, state.glmBaseUrl));
   }
 
   void setLlm(String newValue) {
-    emit(UserSettingState(state.themeData, state.locale, state.key,
-        state.baseUrl, state.useStream, newValue, state.gptModel));
+    emit(UserSettingState(
+        state.themeData,
+        state.locale,
+        state.key,
+        state.baseUrl,
+        state.useStream,
+        newValue,
+        state.gptModel,
+        state.glmBaseUrl));
   }
 
   @override
@@ -71,6 +87,7 @@ class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
     bool useStream = json['user_use_stream_value'] as bool;
     String llm = json['user_llm_value'] as String;
     String gptModel = json['user_gpt_model_value'] as String;
+    String glmBaseUrl = json['user_glm_base_url_value'] as String;
 
     return UserSettingState(
         isDark ? darkTheme : lightTheme,
@@ -79,7 +96,8 @@ class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
         baseUrl,
         useStream,
         llm.isEmpty ? "OpenAI" : llm,
-        gptModel.isEmpty ? "gpt-3.5-turbo" : gptModel);
+        gptModel.isEmpty ? "gpt-3.5-turbo" : gptModel,
+        glmBaseUrl);
   }
 
   Locale _parseLocale(String locale) {
@@ -106,7 +124,8 @@ class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
       'user_proxy_url_value': state.baseUrl,
       'user_use_stream_value': state.useStream,
       'user_llm_value': state.llm,
-      'user_gpt_model_value': state.gptModel
+      'user_gpt_model_value': state.gptModel,
+      'user_glm_base_url_value': state.glmBaseUrl
     };
   }
 }
