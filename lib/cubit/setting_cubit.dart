@@ -7,7 +7,7 @@ part 'setting_state.dart';
 class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
   UserSettingCubit()
       : super(UserSettingState(lightTheme, const Locale('en'), "",
-            "https://api.openai.com", false, "gpt-3.5-turbo")) {
+            "https://api.openai-proxy.com", false, "gpt-3.5-turbo")) {
     hydrate();
   }
 

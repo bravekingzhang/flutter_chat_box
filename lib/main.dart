@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chatgpt/bloc/conversation_bloc.dart';
 import 'package:flutter_chatgpt/bloc/message_bloc.dart';
+import 'package:flutter_chatgpt/bloc/prompt_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_chatgpt/app_bloc_observer.dart';
 import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
@@ -17,6 +18,8 @@ void main() async {
       storageDirectory: await getApplicationDocumentsDirectory());
   GetIt.instance.registerSingleton<UserSettingCubit>(UserSettingCubit());
   Bloc.observer = const AppBlocObserver();
+  PromptBloc promptBloc = PromptBloc();
+  promptBloc.add(PromptFetch());
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(
@@ -27,6 +30,9 @@ void main() async {
       ),
       BlocProvider(
         create: (context) => MessageBloc(),
+      ),
+      BlocProvider(
+        create: (context) => promptBloc,
       ),
     ],
     child: BlocBuilder<UserSettingCubit, UserSettingState>(

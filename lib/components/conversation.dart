@@ -315,30 +315,20 @@ class _ConversationWindowState extends State<ConversationWindow> {
                     const SizedBox(
                       height: 28,
                     ),
-                    TextFormField(
-                      controller: controllerProxy,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.setProxyUrl,
-                        hintText: AppLocalizations.of(context)!.setProxyUrlTips,
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide.none,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(AppLocalizations.of(context)!.useStreamApi),
+                        Switch(
+                          value: BlocProvider.of<UserSettingCubit>(context)
+                              .state
+                              .useStream,
+                          onChanged: (value) {
+                            BlocProvider.of<UserSettingCubit>(context)
+                                .setUseStream(value);
+                          },
                         ),
-                        filled: true,
-                      ),
-                      autovalidateMode: AutovalidateMode.always,
-                      maxLines: null,
-                      onEditingComplete: () {
-                        BlocProvider.of<UserSettingCubit>(context)
-                            .setProxyUrl(controllerProxy.text);
-                      },
-                      onFieldSubmitted: (value) {
-                        BlocProvider.of<UserSettingCubit>(context)
-                            .setProxyUrl(controllerProxy.text);
-                      },
+                      ],
                     ),
                     const SizedBox(
                       height: 28,
@@ -383,51 +373,74 @@ class _ConversationWindowState extends State<ConversationWindow> {
                     const SizedBox(
                       height: 28,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(AppLocalizations.of(context)!.useStreamApi),
-                        Switch(
-                          value: BlocProvider.of<UserSettingCubit>(context)
-                              .state
-                              .useStream,
-                          onChanged: (value) {
-                            BlocProvider.of<UserSettingCubit>(context)
-                                .setUseStream(value);
-                          },
+                    DropdownButtonFormField(
+                      value: BlocProvider.of<UserSettingCubit>(context)
+                          .state
+                          .baseUrl,
+                      decoration: InputDecoration(
+                        labelText:
+                            AppLocalizations.of(context)!.setProxyUrlTips,
+                        hintText: AppLocalizations.of(context)!.setProxyUrlTips,
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide.none,
                         ),
-                      ],
+                        filled: true,
+                      ),
+                      items: <String>[
+                        'https://api.openai-proxy.com',
+                        'https://inkcast.com',
+                        'https://api.openai.com'
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        if (newValue == null) return;
+                        BlocProvider.of<UserSettingCubit>(context)
+                            .setProxyUrl(newValue);
+                      },
                     ),
                     const SizedBox(
                       height: 28,
                     ),
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        Text(AppLocalizations.of(context)!.gptModel),
-                        const SizedBox(
-                          width: 10,
+                    DropdownButtonFormField(
+                        value: BlocProvider.of<UserSettingCubit>(context)
+                            .state
+                            .gptModel,
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.gptModel,
+                          hintText: AppLocalizations.of(context)!.gptModel,
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
                         ),
-                        DropdownButton<String>(
-                          value: BlocProvider.of<UserSettingCubit>(context)
-                              .state
-                              .gptModel,
-                          onChanged: (String? newValue) {
-                            BlocProvider.of<UserSettingCubit>(context)
-                                .setGptModel(newValue!);
-                          },
-                          items: <String>[
-                            'gpt-3.5-turbo',
-                            'gpt-3.5-turbo-0301',
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ),
+                        items: <String>[
+                          'gpt-3.5-turbo',
+                          'gpt-3.5-turbo-0301',
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          if (newValue == null) return;
+                          BlocProvider.of<UserSettingCubit>(context)
+                              .setGptModel(newValue);
+                        }),
                   ],
                 ),
               ),

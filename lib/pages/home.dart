@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_chatgpt/bloc//conversation_bloc.dart';
-import 'package:flutter_chatgpt/bloc/message_bloc.dart';
 import 'package:flutter_chatgpt/components/chat.dart';
 import 'package:flutter_chatgpt/components/conversation.dart';
 import 'package:flutter_chatgpt/device/form_factor.dart';

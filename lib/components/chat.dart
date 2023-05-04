@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chatgpt/bloc/conversation_bloc.dart';
 import 'package:flutter_chatgpt/bloc/message_bloc.dart';
+import 'package:flutter_chatgpt/bloc/prompt_bloc.dart';
 import 'package:flutter_chatgpt/components/markdown.dart';
 import 'package:flutter_chatgpt/device/form_factor.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
@@ -23,6 +26,11 @@ class _ChatWindowState extends State<ChatWindow> {
   final _controller = TextEditingController();
   final _formKey = GlobalKey<FormState>(); // 定义一个 GlobalKey
   final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +59,31 @@ class _ChatWindowState extends State<ChatWindow> {
                         },
                       );
                     } else {
-                      return _buildExpandEmptyListView();
+                      return BlocBuilder<PromptBloc, PromptState>(
+                          builder: ((context, state) {
+                        if (state.runtimeType == PromptLoading) {
+                          return ListView(
+                              controller: _scrollController,
+                              children: const [
+                                Center(
+                                  child: Center(child: Text("正在加载prompts...")),
+                                )
+                              ]);
+                        } else if (state.runtimeType == PromptSuccess) {
+                          PromptSuccess stateSuccess = state as PromptSuccess;
+                          return _buildExpandEmptyListView(
+                              stateSuccess.prompts);
+                        } else {
+                          return ListView(
+                              controller: _scrollController,
+                              children: const [
+                                Center(
+                                  child: Center(
+                                      child: Text("加载prompts列表失败，请检查网络")),
+                                )
+                              ]);
+                        }
+                      }));
                     }
                   },
                 ),
@@ -132,7 +164,10 @@ class _ChatWindowState extends State<ChatWindow> {
           context.read<ConversationBloc>().state.currentConversationUuid;
       if (conversationUuid.isEmpty) {
         // new conversation
-        conversationUuid = _newConversation(message, message);
+        //message 的前10个字符，如果message不够10个字符，则全部
+        conversationUuid = _newConversation(
+            message.substring(0, message.length > 20 ? 20 : message.length),
+            message);
       }
       final newMessage = Message(
         conversationId: conversationUuid,
@@ -232,31 +267,29 @@ class _ChatWindowState extends State<ChatWindow> {
     }
   }
 
-  Widget _buildExpandEmptyListView() {
+  Widget _buildExpandEmptyListView(List<Prompt> prompts) {
     if (MediaQuery.of(context).size.width > FormFactor.tablet) {
       return GridView.builder(
         controller: _scrollController,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
         ),
-        itemCount: sceneList.length,
+        itemCount: prompts.length,
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
-            onTap: () => {
-              _controller.text = (sceneList[index]["description"] as String)
-            },
+            onTap: () => {_controller.text = (prompts[index].prompt)},
             child: Container(
               margin: const EdgeInsets.all(8),
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: sceneList[index]["color"] as Color,
+                color: getRandomColor() as Color,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '${sceneList[index]["title"]}',
+                    prompts[index].act,
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -267,12 +300,12 @@ class _ChatWindowState extends State<ChatWindow> {
                   const SizedBox(height: 10),
                   Expanded(
                     child: Text(
-                      '${sceneList[index]["description"]}',
+                      prompts[index].prompt,
                       style: const TextStyle(
                         fontSize: 16,
                       ),
-                      overflow: TextOverflow.fade,
-                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
                     ),
                   )
                 ],
@@ -284,24 +317,22 @@ class _ChatWindowState extends State<ChatWindow> {
     } else {
       return ListView.builder(
         controller: _scrollController,
-        itemCount: sceneList.length,
+        itemCount: prompts.length,
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
-            onTap: () => {
-              _controller.text = (sceneList[index]["description"] as String)
-            },
+            onTap: () => {_controller.text = prompts[index].prompt},
             child: Container(
               margin: const EdgeInsets.all(8),
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: sceneList[index]["color"] as Color,
+                color: getRandomColor() as Color,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '${sceneList[index]["title"]}',
+                    prompts[index].act,
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -309,7 +340,7 @@ class _ChatWindowState extends State<ChatWindow> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    '${sceneList[index]["description"]}',
+                    prompts[index].prompt,
                     style: const TextStyle(
                       fontSize: 16,
                     ),
@@ -324,40 +355,17 @@ class _ChatWindowState extends State<ChatWindow> {
   }
 }
 
-var sceneList = [
-  {
-    "title": "前端开发",
-    "color": Colors.blue[300],
-    "description": "需要你扮演技术精湛的前端开发工程师，解决前端问题"
-  },
-  {
-    "title": "后端开发",
-    "color": Colors.green[300],
-    "description": "需要你扮演技术精湛的后端开发工程师，解决后端问题"
-  },
-  {
-    "title": "数据分析师",
-    "color": Colors.purple[300],
-    "description": "需要你扮演数据分析师，解决数据分析问题"
-  },
-  {
-    "title": "测试工程师",
-    "color": Colors.orange[300],
-    "description": "需要你扮演测试工程师，解决测试问题"
-  },
-  {
-    "title": "运维工程师",
-    "color": Colors.red[300],
-    "description": "需要你扮演运维工程师，解决运维问题"
-  },
-  {
-    "title": "产品经理",
-    "color": Colors.blueGrey[300],
-    "description": "需要你扮演产品经理，解决产品问题"
-  },
-  {
-    "title": "UI设计师",
-    "color": Colors.pink[300],
-    "description": "需要你扮演UI设计师，解决UI设计问题"
-  }
+List<Color?> sMaterialColor = [
+  Colors.blue[300],
+  Colors.green[300],
+  Colors.purple[300],
+  Colors.red[300],
+  Colors.yellow[300],
+  Colors.pink[300],
+  Colors.orange[300],
+  Colors.teal[300],
+  Colors.brown[300],
 ];
+Color? getRandomColor() {
+  return sMaterialColor[Random().nextInt(sMaterialColor.length)];
+}
