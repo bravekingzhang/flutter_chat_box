@@ -11,7 +11,8 @@ class ChatGlM extends LLM {
       ValueChanged<Message> onResponse,
       ValueChanged<Message> errorCallback,
       ValueChanged<Message> onSuccess) async {
-    var prompt = messages.removeLast().text;
+    var messageToBeSend = messages.removeLast();
+    var prompt = messageToBeSend.text;
     var history = messages.length >= 2 ? collectHistory(messages) : [];
     var body = {'prompt': prompt, 'history': history.isEmpty ? [] : history};
     final response = await http.post(
@@ -29,13 +30,13 @@ class ChatGlM extends LLM {
       // ));
       onSuccess(Message(
         text: jsonObj['response'],
-        conversationId: messages.last.conversationId,
+        conversationId: messageToBeSend.conversationId,
         role: Role.assistant,
       ));
     } else {
       errorCallback(Message(
         text: "request glm error,Please try again later",
-        conversationId: messages.last.conversationId,
+        conversationId: messageToBeSend.conversationId,
         role: Role.assistant,
       ));
     }
