@@ -4,6 +4,7 @@ import 'package:flutter_chatgpt/bloc/conversation_bloc.dart';
 import 'package:flutter_chatgpt/bloc/message_bloc.dart';
 import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
+import 'package:flutter_chatgpt/utils/package.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConversationWindow extends StatefulWidget {
@@ -15,11 +16,15 @@ class ConversationWindow extends StatefulWidget {
 
 class _ConversationWindowState extends State<ConversationWindow> {
   bool _isObscure = true;
+  String version = '1.0.0';
   @override
   void initState() {
     super.initState();
     BlocProvider.of<ConversationBloc>(context)
         .add(const LoadConversationsEvent());
+    getAppVersion().then((value) => setState(() {
+          version = value;
+        }));
   }
 
   @override
@@ -90,7 +95,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                     ),
                     TextButton.icon(
                       onPressed: () {},
-                      label: const Text("Version：1.0.1"),
+                      label: Text("Version：$version"),
                       icon: const Icon(Icons.info),
                     ),
                     TextButton.icon(
@@ -261,142 +266,143 @@ class _ConversationWindowState extends State<ConversationWindow> {
     final TextEditingController controllerApiKey = TextEditingController();
     final TextEditingController controllerProxy = TextEditingController();
     final TextEditingController controllerGlmBaseUrl = TextEditingController();
-    List<Widget> chatGlMModelSettings = [
-      const SizedBox(
-        height: 28,
-      ),
-      TextFormField(
-        controller: controllerGlmBaseUrl,
-        decoration: InputDecoration(
-          labelText: AppLocalizations.of(context)!.gmlBaseUrl,
-          hintText: AppLocalizations.of(context)!.gmlBaseUrl,
-          floatingLabelBehavior: FloatingLabelBehavior.auto,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-            borderSide: BorderSide.none,
+    List<Widget> chatGlMModelSettings(StateSetter setState) => [
+          const SizedBox(
+            height: 28,
           ),
-          filled: true,
-        ),
-        autovalidateMode: AutovalidateMode.always,
-        maxLines: 1,
-        onEditingComplete: () {
-          BlocProvider.of<UserSettingCubit>(context)
-              .setKey(controllerGlmBaseUrl.text);
-        },
-        onFieldSubmitted: (value) {
-          BlocProvider.of<UserSettingCubit>(context)
-              .setKey(controllerGlmBaseUrl.text);
-        },
-      ),
-    ];
-    List<Widget> openAiModelSettings = [
-      const SizedBox(
-        height: 28,
-      ),
-      TextFormField(
-        controller: controllerApiKey,
-        decoration: InputDecoration(
-          labelText: AppLocalizations.of(context)!.enterKey,
-          hintText: AppLocalizations.of(context)!.enterKeyTips,
-          floatingLabelBehavior: FloatingLabelBehavior.auto,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-            borderSide: BorderSide.none,
-          ),
-          filled: true,
-          suffixIcon: IconButton(
-            icon: Icon(
-              Icons.remove_red_eye,
-              color: _isObscure ? Colors.grey : Colors.blue,
+          TextFormField(
+            controller: controllerGlmBaseUrl,
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.gmlBaseUrl,
+              hintText: AppLocalizations.of(context)!.gmlBaseUrl,
+              floatingLabelBehavior: FloatingLabelBehavior.auto,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
             ),
-            onPressed: () {
-              setState(() {
-                _isObscure = !_isObscure;
-              });
+            autovalidateMode: AutovalidateMode.always,
+            maxLines: 1,
+            onEditingComplete: () {
+              BlocProvider.of<UserSettingCubit>(context)
+                  .setKey(controllerGlmBaseUrl.text);
+            },
+            onFieldSubmitted: (value) {
+              BlocProvider.of<UserSettingCubit>(context)
+                  .setKey(controllerGlmBaseUrl.text);
             },
           ),
-        ),
-        autovalidateMode: AutovalidateMode.always,
-        maxLines: 1,
-        onEditingComplete: () {
-          BlocProvider.of<UserSettingCubit>(context)
-              .setKey(controllerApiKey.text);
-        },
-        onFieldSubmitted: (value) {
-          BlocProvider.of<UserSettingCubit>(context)
-              .setKey(controllerApiKey.text);
-        },
-        obscureText: _isObscure,
-      ),
-      const SizedBox(
-        height: 28,
-      ),
-      DropdownButtonFormField(
-        value: BlocProvider.of<UserSettingCubit>(context).state.baseUrl,
-        decoration: InputDecoration(
-          labelText: AppLocalizations.of(context)!.setProxyUrlTips,
-          hintText: AppLocalizations.of(context)!.setProxyUrlTips,
-          floatingLabelBehavior: FloatingLabelBehavior.auto,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-            borderSide: BorderSide.none,
+        ];
+    List<Widget> openAiModelSettings(StateSetter setState) => [
+          const SizedBox(
+            height: 28,
           ),
-          filled: true,
-        ),
-        items: <String>[
-          'https://api.openai-proxy.com',
-          'https://inkcast.com',
-          'https://api.openai.com'
-        ].map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(
-              value,
+          TextFormField(
+            controller: controllerApiKey,
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.enterKey,
+              hintText: AppLocalizations.of(context)!.enterKeyTips,
+              floatingLabelBehavior: FloatingLabelBehavior.auto,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  Icons.remove_red_eye,
+                  color: _isObscure ? Colors.grey : Colors.blue,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isObscure = !_isObscure;
+                  });
+                },
+              ),
             ),
-          );
-        }).toList(),
-        onChanged: (String? newValue) {
-          if (newValue == null) return;
-          BlocProvider.of<UserSettingCubit>(context).setProxyUrl(newValue);
-        },
-      ),
-      const SizedBox(
-        height: 28,
-      ),
-      DropdownButtonFormField(
-          value: BlocProvider.of<UserSettingCubit>(context).state.gptModel,
-          decoration: InputDecoration(
-            labelText: AppLocalizations.of(context)!.gptModel,
-            hintText: AppLocalizations.of(context)!.gptModel,
-            floatingLabelBehavior: FloatingLabelBehavior.auto,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-              borderSide: BorderSide.none,
-            ),
-            filled: true,
+            autovalidateMode: AutovalidateMode.always,
+            maxLines: 1,
+            onEditingComplete: () {
+              BlocProvider.of<UserSettingCubit>(context)
+                  .setKey(controllerApiKey.text);
+            },
+            onFieldSubmitted: (value) {
+              BlocProvider.of<UserSettingCubit>(context)
+                  .setKey(controllerApiKey.text);
+            },
+            obscureText: _isObscure,
           ),
-          items: <String>[
-            'gpt-3.5-turbo',
-            'gpt-3.5-turbo-0301',
-          ].map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            if (newValue == null) return;
-            BlocProvider.of<UserSettingCubit>(context).setGptModel(newValue);
-          }),
-    ];
+          const SizedBox(
+            height: 28,
+          ),
+          DropdownButtonFormField(
+            value: BlocProvider.of<UserSettingCubit>(context).state.baseUrl,
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.setProxyUrlTips,
+              hintText: AppLocalizations.of(context)!.setProxyUrlTips,
+              floatingLabelBehavior: FloatingLabelBehavior.auto,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+            ),
+            items: <String>[
+              'https://api.openai-proxy.com',
+              'https://inkcast.com',
+              'https://api.openai.com'
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                ),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              if (newValue == null) return;
+              BlocProvider.of<UserSettingCubit>(context).setProxyUrl(newValue);
+            },
+          ),
+          const SizedBox(
+            height: 28,
+          ),
+          DropdownButtonFormField(
+              value: BlocProvider.of<UserSettingCubit>(context).state.gptModel,
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.gptModel,
+                hintText: AppLocalizations.of(context)!.gptModel,
+                floatingLabelBehavior: FloatingLabelBehavior.auto,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+              ),
+              items: <String>[
+                'gpt-3.5-turbo',
+                'gpt-3.5-turbo-0301',
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                if (newValue == null) return;
+                BlocProvider.of<UserSettingCubit>(context)
+                    .setGptModel(newValue);
+              }),
+        ];
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -494,11 +500,11 @@ class _ConversationWindowState extends State<ConversationWindow> {
           ];
           if (BlocProvider.of<UserSettingCubit>(context).state.llm ==
               "OpenAI") {
-            children.addAll(openAiModelSettings);
+            children.addAll(openAiModelSettings(setState));
           }
           if (BlocProvider.of<UserSettingCubit>(context).state.llm ==
               "ChatGlm") {
-            children.addAll(chatGlMModelSettings);
+            children.addAll(chatGlMModelSettings(setState));
           }
           return AlertDialog(
             title: Text(AppLocalizations.of(context)!.settings),
