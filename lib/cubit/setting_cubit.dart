@@ -78,6 +78,11 @@ class UserSettingCubit extends Cubit<UserSettingState> with HydratedMixin {
         state.glmBaseUrl));
   }
 
+  void setGlmBaseUrl(String text) {
+    emit(UserSettingState(state.themeData, state.locale, state.key,
+        state.baseUrl, state.useStream, state.llm, state.gptModel, text));
+  }
+
   @override
   UserSettingState? fromJson(Map<String, dynamic> json) {
     bool isDark = json['user_theme_value'] as bool;

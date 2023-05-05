@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
 import 'package:flutter_chatgpt/data/llm.dart';
@@ -16,7 +18,7 @@ class ChatGlM extends LLM {
     var messageToBeSend = messages.removeLast();
     var prompt = messageToBeSend.text;
     var history = messages.length >= 2 ? collectHistory(messages) : [];
-    var body = {'prompt': prompt, 'history': history.isEmpty ? [] : history};
+    var body = {'query': prompt, 'history': history.isEmpty ? [] : history};
     var glmBaseUrl = GetIt.instance.get<UserSettingCubit>().state.glmBaseUrl;
     if (glmBaseUrl.isEmpty) {
       errorCallback(Message(
@@ -26,25 +28,39 @@ class ChatGlM extends LLM {
       ));
       return;
     }
-    final response = await http.post(Uri.parse(glmBaseUrl),
-        body: json.encode(body), headers: {'Content-Type': 'application/json'});
-    if (response.statusCode == 200) {
-      var jsonObj = jsonDecode(utf8.decode(response.bodyBytes));
-
-      ///TODO: 流式响应
-      // onResponse(Message(
-      //   text: jsonObj['response'],
-      //   conversationId: messages.last.conversationId,
-      //   role: Role.assistant,
-      // ));
-      onSuccess(Message(
-        text: jsonObj['response'],
-        conversationId: messageToBeSend.conversationId,
-        role: Role.assistant,
-      ));
-    } else {
+    final request = http.Request("POST", Uri.parse(glmBaseUrl));
+    request.headers.addAll({'Content-Type': 'application/json'});
+    final requestBody = json.encode(body);
+    request.body = requestBody;
+    try {
+      final response = await request.send();
+      /**  chunk like this
+     *  event: delta
+     *   data: {"delta": "j", "response": "j", "finished": false}
+     */
+      await for (final chunk in response.stream.transform(utf8.decoder)) {
+        String data = chunk.split('\n').firstWhere(
+            (element) => element.startsWith("data:"),
+            orElse: () => 'No matching data');
+        if (!data.startsWith("data:")) {
+          continue;
+        }
+        final jsonData = jsonDecode(data.split("data:")[1].trim());
+        if (jsonData["finished"]) {
+          onSuccess(Message(
+              conversationId: messageToBeSend.conversationId,
+              text: jsonData["response"],
+              role: Role.assistant));
+        } else {
+          onResponse(Message(
+              conversationId: messageToBeSend.conversationId,
+              text: jsonData["response"],
+              role: Role.assistant));
+        }
+      }
+    } catch (e) {
       errorCallback(Message(
-        text: "request glm error,Please try again later",
+        text: e.toString(),
         conversationId: messageToBeSend.conversationId,
         role: Role.assistant,
       ));
@@ -57,7 +73,7 @@ List<List<String>> collectHistory(List<Message> list) {
   for (int i = list.length - 1; i >= 0; i -= 2) {
     //只添加最近的会话
     if (i - 1 > 0) {
-      result.insert(0, [list[-1].text, list[i].text]);
+      result.insert(0, [list[i - 1].text, list[i].text]);
     }
     if (result.length > 3) {
       //放太多轮次也没啥意思

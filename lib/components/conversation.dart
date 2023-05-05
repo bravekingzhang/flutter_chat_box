@@ -260,12 +260,13 @@ class _ConversationWindowState extends State<ConversationWindow> {
   void _showSetting(BuildContext context) {
     final TextEditingController controllerApiKey = TextEditingController();
     final TextEditingController controllerProxy = TextEditingController();
+    final TextEditingController controllerGlmBaseUrl = TextEditingController();
     List<Widget> chatGlMModelSettings = [
       const SizedBox(
         height: 28,
       ),
       TextFormField(
-        controller: controllerApiKey,
+        controller: controllerGlmBaseUrl,
         decoration: InputDecoration(
           labelText: AppLocalizations.of(context)!.gmlBaseUrl,
           hintText: AppLocalizations.of(context)!.gmlBaseUrl,
@@ -282,11 +283,11 @@ class _ConversationWindowState extends State<ConversationWindow> {
         maxLines: 1,
         onEditingComplete: () {
           BlocProvider.of<UserSettingCubit>(context)
-              .setKey(controllerApiKey.text);
+              .setKey(controllerGlmBaseUrl.text);
         },
         onFieldSubmitted: (value) {
           BlocProvider.of<UserSettingCubit>(context)
-              .setKey(controllerApiKey.text);
+              .setKey(controllerGlmBaseUrl.text);
         },
       ),
     ];
@@ -403,6 +404,8 @@ class _ConversationWindowState extends State<ConversationWindow> {
             BlocProvider.of<UserSettingCubit>(context).state.key;
         controllerProxy.text =
             BlocProvider.of<UserSettingCubit>(context).state.baseUrl;
+        controllerGlmBaseUrl.text =
+            BlocProvider.of<UserSettingCubit>(context).state.glmBaseUrl;
         return StatefulBuilder(builder: (context, setState) {
           var children = [
             Row(
@@ -513,6 +516,8 @@ class _ConversationWindowState extends State<ConversationWindow> {
                       .setProxyUrl(controllerProxy.text);
                   BlocProvider.of<UserSettingCubit>(context)
                       .setKey(controllerApiKey.text);
+                  BlocProvider.of<UserSettingCubit>(context)
+                      .setGlmBaseUrl(controllerGlmBaseUrl.text);
                   Navigator.of(context).pop();
                 },
                 child: Text(AppLocalizations.of(context)!.ok),
