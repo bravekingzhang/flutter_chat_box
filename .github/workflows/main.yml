@@ -16,12 +16,10 @@ jobs:
       - run: flutter pub get
       #     - run: flutter test
       - run: flutter build apk
-      - uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v3
         with:
-          releaseId: 1.1.0
-          args: "build/app/outputs/apk/release/*.apk"
+          name: flutter_chat_box.apk
+          path: "build/app/outputs/apk/release/*.apk"
 
   build-ios:
     name: Build iOS app
@@ -35,7 +33,7 @@ jobs:
       - run: flutter pub get
       #       - run: flutter test
       - run: flutter build ios --release --no-codesign
-      - uses: actions/upload-artifact@v2.2.4
+      - uses: actions/upload-artifact@v3
         with:
           name: flutter_chat_box.ipa
           path: flutter_chatgpt/build/ios/Release-iphoneos/*.app
@@ -62,7 +60,7 @@ jobs:
           architecture: x64
       - run: flutter config --enable-macos-desktop
       - run: flutter build macos
-      - uses: actions/upload-artifact@v2.2.4
+      - uses: actions/upload-artifact@v3
         with:
           name: flutter_chat_box.app
           path: flutter_chatgpt/build/macos/Build/Products/Release/*.app"
