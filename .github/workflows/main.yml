@@ -36,7 +36,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: flutter_chat_box.ipa
-          path: flutter_chatgpt/build/ios/Release-iphoneos/*.app
+          path: build/ios/Release-iphoneos/*.app
 
   # build-windows:
   #   name: Build Windows app
@@ -63,4 +63,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: flutter_chat_box.app
-          path: flutter_chatgpt/build/macos/Build/Products/Release/*.app"
+          path: build/macos/Build/Products/Release/*.app
