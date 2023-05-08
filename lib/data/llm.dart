@@ -23,7 +23,7 @@ class ChatGpt extends LLM {
     String content = "";
     for (Message message in messages) {
       content = content + message.text;
-      if (content.length < 1800) {
+      if (content.length < 1800 || openAIMessages.isEmpty) {
         // 插入到 openAIMessages 第一个位置
         openAIMessages.insert(
           0,
