@@ -2,15 +2,15 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_chatgpt/bloc/conversation_bloc.dart';
-import 'package:flutter_chatgpt/bloc/message_bloc.dart';
-import 'package:flutter_chatgpt/bloc/prompt_bloc.dart';
 import 'package:flutter_chatgpt/components/markdown.dart';
+import 'package:flutter_chatgpt/controller/conversation.dart';
+import 'package:flutter_chatgpt/controller/message.dart';
+import 'package:flutter_chatgpt/controller/prompt.dart';
 import 'package:flutter_chatgpt/device/form_factor.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = const Uuid();
@@ -26,6 +26,8 @@ class _ChatWindowState extends State<ChatWindow> {
   final _controller = TextEditingController();
   final _formKey = GlobalKey<FormState>(); // 定义一个 GlobalKey
   final _scrollController = ScrollController();
+  final ConversationController conversationController =
+      Get.put(ConversationController());
 
   @override
   void initState() {
@@ -43,25 +45,23 @@ class _ChatWindowState extends State<ChatWindow> {
               child: Scrollbar(
                 controller: _scrollController,
                 thumbVisibility: true,
-                child: BlocBuilder<MessageBloc, MessageState>(
-                  builder: (context, state) {
+                child: GetX<MessageController>(
+                  builder: (controller) {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       _scrollToNewMessage();
                     });
-                    if (state.runtimeType == MessagesLoaded) {
-                      var currentState = state as MessagesLoaded;
+                    if (controller.messageList.isNotEmpty) {
                       return ListView.builder(
                         controller: _scrollController,
-                        itemCount: currentState.messages.length,
+                        itemCount: controller.messageList.length,
                         itemBuilder: (context, index) {
                           return _buildMessageCard(
-                              currentState.messages[index]);
+                              controller.messageList[index]);
                         },
                       );
                     } else {
-                      return BlocBuilder<PromptBloc, PromptState>(
-                          builder: ((context, state) {
-                        if (state.runtimeType == PromptLoading) {
+                      return GetX<PromptController>(builder: ((controller) {
+                        if (controller.prompts.isEmpty) {
                           return ListView(
                               controller: _scrollController,
                               children: const [
@@ -69,10 +69,8 @@ class _ChatWindowState extends State<ChatWindow> {
                                   child: Center(child: Text("正在加载prompts...")),
                                 )
                               ]);
-                        } else if (state.runtimeType == PromptSuccess) {
-                          PromptSuccess stateSuccess = state as PromptSuccess;
-                          return _buildExpandEmptyListView(
-                              stateSuccess.prompts);
+                        } else if (controller.prompts.isNotEmpty) {
+                          return _buildExpandEmptyListView(controller.prompts);
                         } else {
                           return ListView(
                               controller: _scrollController,
@@ -149,19 +147,16 @@ class _ChatWindowState extends State<ChatWindow> {
       description: description,
       uuid: uuid.v4(),
     );
-    BlocProvider.of<ConversationBloc>(context).add(
-      AddConversationEvent(
-        conversation,
-      ),
-    );
     return conversation.uuid;
   }
 
   void _sendMessage() {
     final message = _controller.text;
+    final MessageController messageController = Get.find();
+    final ConversationController conversationController = Get.find();
     if (message.isNotEmpty) {
       var conversationUuid =
-          context.read<ConversationBloc>().state.currentConversationUuid;
+          conversationController.currentConversationUuid.value;
       if (conversationUuid.isEmpty) {
         // new conversation
         //message 的前10个字符，如果message不够10个字符，则全部
@@ -174,7 +169,7 @@ class _ChatWindowState extends State<ChatWindow> {
         role: Role.user,
         text: message,
       );
-      context.read<MessageBloc>().add(SendMessageEvent(newMessage));
+      messageController.addMessage(newMessage);
       _formKey.currentState!.reset();
     }
   }

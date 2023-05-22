@@ -1,52 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_chatgpt/bloc/conversation_bloc.dart';
-import 'package:flutter_chatgpt/bloc/message_bloc.dart';
-import 'package:flutter_chatgpt/bloc/prompt_bloc.dart';
+import 'package:flutter_chatgpt/controller/conversation.dart';
+import 'package:flutter_chatgpt/controller/message.dart';
+import 'package:flutter_chatgpt/controller/prompt.dart';
+import 'package:flutter_chatgpt/controller/settings.dart';
+import 'package:flutter_chatgpt/pages/unknown.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_chatgpt/app_bloc_observer.dart';
-import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
 import 'package:flutter_chatgpt/route.dart';
-import 'package:get_it/get_it.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:get/get.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  HydratedBloc.storage = await HydratedStorage.build(
-      storageDirectory: await getApplicationDocumentsDirectory());
-  GetIt.instance.registerSingleton<UserSettingCubit>(UserSettingCubit());
-  Bloc.observer = const AppBlocObserver();
-  PromptBloc promptBloc = PromptBloc();
-  promptBloc.add(PromptFetch());
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider(
-        create: (context) => GetIt.instance.get<UserSettingCubit>(),
-      ),
-      BlocProvider(
-        create: (context) => ConversationBloc(),
-      ),
-      BlocProvider(
-        create: (context) => MessageBloc(),
-      ),
-      BlocProvider(
-        create: (context) => promptBloc,
-      ),
-    ],
-    child: BlocBuilder<UserSettingCubit, UserSettingState>(
-      builder: (context, state) {
-        return MaterialApp.router(
-          theme: state.themeData,
-          routerConfig: gRouter,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          locale: BlocProvider.of<UserSettingCubit>(context).state.locale,
-          builder: EasyLoading.init(),
-          debugShowCheckedModeBanner: false,
-        );
-      },
-    ),
-  ));
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    //   Get.lazyPut(() => SettingsController());
+    // Get.lazyPut(() => ConversationController());
+    // Get.lazyPut(() => MessageController());
+    // Get.lazyPut(() => PromptController());
+    Get.put(SettingsController());
+    Get.put(ConversationController());
+    Get.put(MessageController());
+    Get.put(PromptController());
+    return GetMaterialApp(
+      initialRoute: '/',
+      getPages: routes,
+      unknownRoute:
+          GetPage(name: '/not_found', page: () => const UnknownRoutePage()),
+      theme: ThemeData.light().copyWith(primaryColor: Colors.green),
+      darkTheme: ThemeData.dark().copyWith(primaryColor: Colors.purple),
+      themeMode: ThemeMode.system,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: SettingsController.to.locale.value,
+      builder: EasyLoading.init(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_chatgpt/bloc/conversation_bloc.dart';
-import 'package:flutter_chatgpt/bloc/message_bloc.dart';
-import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
+import 'package:flutter_chatgpt/controller/conversation.dart';
+import 'package:flutter_chatgpt/controller/message.dart';
+import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:flutter_chatgpt/utils/package.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get/get.dart';
 
 class ConversationWindow extends StatefulWidget {
   const ConversationWindow({super.key});
@@ -20,8 +20,6 @@ class _ConversationWindowState extends State<ConversationWindow> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ConversationBloc>(context)
-        .add(const LoadConversationsEvent());
     getAppVersion().then((value) => setState(() {
           version = value;
         }));
@@ -29,93 +27,86 @@ class _ConversationWindowState extends State<ConversationWindow> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ConversationBloc, ConversationState>(
-      builder: (context, state) {
-        return Container(
-          decoration: BoxDecoration(
-              color: BlocProvider.of<UserSettingCubit>(context)
-                  .state
-                  .themeData
-                  .cardColor,
-              border: const Border(right: BorderSide(width: .3))),
-          constraints: const BoxConstraints(maxWidth: 300),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              state.runtimeType == ConversationInitial ||
-                      state.conversations.isEmpty
-                  ? Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.noConversationTips,
-                            textAlign: TextAlign.center,
-                          ),
+    return Container(
+      decoration:
+          const BoxDecoration(border: Border(right: BorderSide(width: .3))),
+      constraints: const BoxConstraints(maxWidth: 300),
+      child: GetX<ConversationController>(builder: (controller) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            controller.conversationList.isEmpty
+                ? Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.noConversationTips,
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                    )
-                  : Expanded(
-                      child: ListView.builder(
-                        itemCount: state.conversations.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            onTap: () {
-                              _tapConversation(index);
-                            },
-                            selected: state.currentConversationUuid ==
-                                state.conversations[index].uuid,
-                            leading: const Icon(Icons.chat),
-                            title: Text(state.conversations[index].name),
-                            trailing: Builder(builder: (context) {
-                              return IconButton(
-                                  onPressed: () {
-                                    //显示一个overlay操作
-                                    _showConversationDetail(context, index);
-                                  },
-                                  icon: const Icon(Icons.more_horiz));
-                            }),
-                          );
-                        },
-                      ),
                     ),
-              const Divider(thickness: .3),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextButton.icon(
-                      onPressed: () {
-                        _showNewConversationDialog(context);
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: controller.conversationList.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          onTap: () {
+                            _tapConversation(index);
+                          },
+                          selected: controller.currentConversationUuid.value ==
+                              controller.conversationList[index].uuid,
+                          leading: const Icon(Icons.chat),
+                          title: Text(controller.conversationList[index].name),
+                          trailing: Builder(builder: (context) {
+                            return IconButton(
+                                onPressed: () {
+                                  //显示一个overlay操作
+                                  _showConversationDetail(context, index);
+                                },
+                                icon: const Icon(Icons.more_horiz));
+                          }),
+                        );
                       },
-                      label:
-                          Text(AppLocalizations.of(context)!.newConversation),
-                      icon: const Icon(Icons.add_box),
                     ),
-                    TextButton.icon(
-                      onPressed: () {},
-                      label: Text("Version：$version"),
-                      icon: const Icon(Icons.info),
-                    ),
-                    TextButton.icon(
-                      onPressed: () {
-                        _showSetting(context);
-                      },
-                      label: Text(AppLocalizations.of(context)!.settings),
-                      icon: const Icon(Icons.settings),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+                  ),
+            const Divider(thickness: .3),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextButton.icon(
+                    onPressed: () {
+                      _showNewConversationDialog(context);
+                    },
+                    label: Text(AppLocalizations.of(context)!.newConversation),
+                    icon: const Icon(Icons.add_box),
+                  ),
+                  TextButton.icon(
+                    onPressed: () {},
+                    label: Text("Version：$version"),
+                    icon: const Icon(Icons.info),
+                  ),
+                  TextButton.icon(
+                    onPressed: () {
+                      _showSetting(context);
+                    },
+                    label: Text(AppLocalizations.of(context)!.settings),
+                    icon: const Icon(Icons.settings),
+                  ),
+                ],
+              ),
+            )
+          ],
         );
-      },
+      }),
     );
   }
 
   void _showConversationDetail(BuildContext context, int index) {
+    final ConversationController controller = Get.find();
     final RenderBox button = context.findRenderObject() as RenderBox;
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
@@ -142,34 +133,25 @@ class _ConversationWindowState extends State<ConversationWindow> {
       ],
     ).then((value) {
       if (value == "delete") {
-        BlocProvider.of<ConversationBloc>(context).add(DeleteConversationEvent(
-            context.read<ConversationBloc>().state.conversations[index]));
+        controller.deleteConversation(index);
       } else if (value == "rename") {
         _renameConversation(context, index);
-        BlocProvider.of<ConversationBloc>(context).add(UpdateConversationEvent(
-            context.read<ConversationBloc>().state.conversations[index]));
       }
     });
   }
 
   void _showNewConversationDialog(BuildContext context) {
-    context.read<ConversationBloc>().add(const ChooseConversationEvent(""));
-    context
-        .read<MessageBloc>()
-        .add(const LoadAllMessagesEvent("new conversation"));
+    ConversationController controller = Get.find();
+    controller.setCurrentConversationUuid("");
   }
 
   void _renameConversation(BuildContext context, int index) {
-    var outerContext = context;
+    final ConversationController conversationController = Get.find();
     showDialog(
       context: context,
       builder: (BuildContext context) {
         final TextEditingController controller = TextEditingController();
-        controller.text = outerContext
-            .read<ConversationBloc>()
-            .state
-            .conversations[index]
-            .name;
+        controller.text = conversationController.conversationList[index].name;
         return AlertDialog(
           title: const Text("Rename Conversation"),
           content: Column(
@@ -197,52 +179,17 @@ class _ConversationWindowState extends State<ConversationWindow> {
           actions: [
             TextButton(
               onPressed: () {
-                _showSecondConfirm();
-              },
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                BlocProvider.of<ConversationBloc>(outerContext).add(
-                  UpdateConversationEvent(
-                    Conversation(
-                      name: controller.text,
-                      description: "",
-                      uuid: outerContext
-                          .read<ConversationBloc>()
-                          .state
-                          .conversations[index]
-                          .uuid,
-                    ),
-                  ),
-                );
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  _showSecondConfirm() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Confirm"),
-          content: const Text("Are you sure to cancel?"),
-          actions: [
-            TextButton(
-              onPressed: () {
                 Navigator.of(context).pop();
               },
               child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                conversationController.renameConversation(Conversation(
+                  name: controller.text,
+                  description: "",
+                  uuid: conversationController.conversationList[index].uuid,
+                ));
                 Navigator.of(context).pop();
               },
               child: const Text("OK"),
@@ -254,18 +201,19 @@ class _ConversationWindowState extends State<ConversationWindow> {
   }
 
   _tapConversation(int index) {
-    String conversationUUid =
-        context.read<ConversationBloc>().state.conversations[index].uuid;
-    context
-        .read<ConversationBloc>()
-        .add(ChooseConversationEvent(conversationUUid));
-    context.read<MessageBloc>().add(LoadAllMessagesEvent(conversationUUid));
+    ConversationController controller = Get.find();
+
+    String conversationUUid = controller.conversationList[index].uuid;
+    controller.currentConversationUuid(conversationUUid);
+    MessageController controllerMessage = Get.find();
+    controllerMessage.loadAllMessages(conversationUUid);
   }
 
   void _showSetting(BuildContext context) {
     final TextEditingController controllerApiKey = TextEditingController();
     final TextEditingController controllerProxy = TextEditingController();
     final TextEditingController controllerGlmBaseUrl = TextEditingController();
+    final SettingsController settingsController = Get.find();
     List<Widget> chatGlMModelSettings(StateSetter setState) => [
           const SizedBox(
             height: 28,
@@ -287,12 +235,10 @@ class _ConversationWindowState extends State<ConversationWindow> {
             autovalidateMode: AutovalidateMode.always,
             maxLines: 1,
             onEditingComplete: () {
-              BlocProvider.of<UserSettingCubit>(context)
-                  .setKey(controllerGlmBaseUrl.text);
+              settingsController.setGlmBaseUrl(controllerGlmBaseUrl.text);
             },
             onFieldSubmitted: (value) {
-              BlocProvider.of<UserSettingCubit>(context)
-                  .setKey(controllerGlmBaseUrl.text);
+              settingsController.setGlmBaseUrl(controllerGlmBaseUrl.text);
             },
           ),
         ];
@@ -328,12 +274,10 @@ class _ConversationWindowState extends State<ConversationWindow> {
             autovalidateMode: AutovalidateMode.always,
             maxLines: 1,
             onEditingComplete: () {
-              BlocProvider.of<UserSettingCubit>(context)
-                  .setKey(controllerApiKey.text);
+              settingsController.setOpenAiKey(controllerApiKey.text);
             },
             onFieldSubmitted: (value) {
-              BlocProvider.of<UserSettingCubit>(context)
-                  .setKey(controllerApiKey.text);
+              settingsController.setOpenAiKey(controllerApiKey.text);
             },
             obscureText: _isObscure,
           ),
@@ -341,7 +285,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
             height: 28,
           ),
           DropdownButtonFormField(
-            value: BlocProvider.of<UserSettingCubit>(context).state.baseUrl,
+            value: settingsController.openAiBaseUrl.value,
             decoration: InputDecoration(
               labelText: AppLocalizations.of(context)!.setProxyUrlTips,
               hintText: AppLocalizations.of(context)!.setProxyUrlTips,
@@ -368,14 +312,14 @@ class _ConversationWindowState extends State<ConversationWindow> {
             }).toList(),
             onChanged: (String? newValue) {
               if (newValue == null) return;
-              BlocProvider.of<UserSettingCubit>(context).setProxyUrl(newValue);
+              settingsController.setOpenAiBaseUrl(newValue);
             },
           ),
           const SizedBox(
             height: 28,
           ),
           DropdownButtonFormField(
-              value: BlocProvider.of<UserSettingCubit>(context).state.gptModel,
+              value: settingsController.gptModel.value,
               decoration: InputDecoration(
                 labelText: AppLocalizations.of(context)!.gptModel,
                 hintText: AppLocalizations.of(context)!.gptModel,
@@ -399,19 +343,16 @@ class _ConversationWindowState extends State<ConversationWindow> {
               }).toList(),
               onChanged: (String? newValue) {
                 if (newValue == null) return;
-                BlocProvider.of<UserSettingCubit>(context)
-                    .setGptModel(newValue);
+                settingsController.setGptModel(newValue);
               }),
         ];
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        controllerApiKey.text =
-            BlocProvider.of<UserSettingCubit>(context).state.key;
-        controllerProxy.text =
-            BlocProvider.of<UserSettingCubit>(context).state.baseUrl;
-        controllerGlmBaseUrl.text =
-            BlocProvider.of<UserSettingCubit>(context).state.glmBaseUrl;
+        SettingsController settingsController = Get.find();
+        controllerApiKey.text = settingsController.openAiKey.value;
+        controllerProxy.text = settingsController.openAiBaseUrl.value;
+        controllerGlmBaseUrl.text = settingsController.glmBaseUrl.value;
         return StatefulBuilder(builder: (context, setState) {
           var children = [
             Row(
@@ -419,12 +360,9 @@ class _ConversationWindowState extends State<ConversationWindow> {
               children: [
                 Text(AppLocalizations.of(context)!.theme),
                 Switch(
-                  value: BlocProvider.of<UserSettingCubit>(context)
-                          .state
-                          .themeData ==
-                      darkTheme,
+                  value: Get.theme.brightness == Brightness.dark,
                   onChanged: (value) {
-                    BlocProvider.of<UserSettingCubit>(context).switchTheme();
+                    settingsController.switchTheme();
                   },
                 ),
               ],
@@ -437,13 +375,9 @@ class _ConversationWindowState extends State<ConversationWindow> {
               children: [
                 Text(AppLocalizations.of(context)!.language),
                 Switch(
-                  value: BlocProvider.of<UserSettingCubit>(context)
-                          .state
-                          .locale
-                          .languageCode ==
-                      'zh',
+                  value: settingsController.locale.value.languageCode == 'zh',
                   onChanged: (value) {
-                    BlocProvider.of<UserSettingCubit>(context).switchLocale();
+                    settingsController.switchLocale();
                   },
                 ),
               ],
@@ -456,12 +390,9 @@ class _ConversationWindowState extends State<ConversationWindow> {
               children: [
                 Text(AppLocalizations.of(context)!.useStreamApi),
                 Switch(
-                  value: BlocProvider.of<UserSettingCubit>(context)
-                      .state
-                      .useStream,
+                  value: settingsController.useStream.value,
                   onChanged: (value) {
-                    BlocProvider.of<UserSettingCubit>(context)
-                        .setUseStream(value);
+                    settingsController.setUseStream(value);
                   },
                 ),
               ],
@@ -470,7 +401,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
               height: 28,
             ),
             DropdownButtonFormField(
-              value: BlocProvider.of<UserSettingCubit>(context).state.llm,
+              value: settingsController.llm.value,
               decoration: InputDecoration(
                 labelText: AppLocalizations.of(context)!.llmHint,
                 hintText: AppLocalizations.of(context)!.llmHint,
@@ -494,16 +425,14 @@ class _ConversationWindowState extends State<ConversationWindow> {
               }).toList(),
               onChanged: (String? newValue) {
                 if (newValue == null) return;
-                BlocProvider.of<UserSettingCubit>(context).setLlm(newValue);
+                settingsController.setLlm(newValue);
               },
             ),
           ];
-          if (BlocProvider.of<UserSettingCubit>(context).state.llm ==
-              "OpenAI") {
+          if (settingsController.llm.value == "OpenAI") {
             children.addAll(openAiModelSettings(setState));
           }
-          if (BlocProvider.of<UserSettingCubit>(context).state.llm ==
-              "ChatGlm") {
+          if (settingsController.llm.value == "ChatGlm") {
             children.addAll(chatGlMModelSettings(setState));
           }
           return AlertDialog(
@@ -518,12 +447,9 @@ class _ConversationWindowState extends State<ConversationWindow> {
             actions: [
               TextButton(
                 onPressed: () {
-                  BlocProvider.of<UserSettingCubit>(context)
-                      .setProxyUrl(controllerProxy.text);
-                  BlocProvider.of<UserSettingCubit>(context)
-                      .setKey(controllerApiKey.text);
-                  BlocProvider.of<UserSettingCubit>(context)
-                      .setGlmBaseUrl(controllerGlmBaseUrl.text);
+                  settingsController.setOpenAiBaseUrl(controllerProxy.text);
+                  settingsController.setOpenAiKey(controllerApiKey.text);
+                  settingsController.setGlmBaseUrl(controllerGlmBaseUrl.text);
                   Navigator.of(context).pop();
                 },
                 child: Text(AppLocalizations.of(context)!.ok),

@@ -1,8 +1,7 @@
 import 'package:dart_openai/openai.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
+import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
-import 'package:get_it/get_it.dart';
 
 abstract class LLM {
   getResponse(List<Message> messages, ValueChanged<Message> onResponse,
@@ -38,10 +37,10 @@ class ChatGpt extends LLM {
         conversationId: messages.first.conversationId,
         text: "",
         role: Role.assistant); //仅仅第一个返回了角色
-    if (GetIt.instance.get<UserSettingCubit>().state.useStream) {
+    if (SettingsController.to.useStream.value) {
       Stream<OpenAIStreamChatCompletionModel> chatStream = OpenAI.instance.chat
           .createStream(
-              model: GetIt.instance.get<UserSettingCubit>().state.gptModel,
+              model: SettingsController.to.gptModel.value,
               messages: openAIMessages);
       chatStream.listen(
         (chatStreamEvent) {
@@ -62,7 +61,7 @@ class ChatGpt extends LLM {
     } else {
       try {
         var response = await OpenAI.instance.chat.create(
-          model: GetIt.instance.get<UserSettingCubit>().state.gptModel,
+          model: SettingsController.to.gptModel.value,
           messages: openAIMessages,
         );
         message.text = response.choices.first.message.content;

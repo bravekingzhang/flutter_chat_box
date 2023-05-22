@@ -1,6 +1,6 @@
 import 'package:dart_openai/openai.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_chatgpt/cubit/setting_cubit.dart';
+import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:flutter_chatgpt/data/glm.dart';
 import 'package:flutter_chatgpt/data/if.dart';
 import 'package:flutter_chatgpt/data/llm.dart';
@@ -26,8 +26,8 @@ class MessageRepository {
   }
 
   void init() {
-    OpenAI.apiKey = GetIt.instance.get<UserSettingCubit>().state.key;
-    OpenAI.baseUrl = GetIt.instance.get<UserSettingCubit>().state.baseUrl;
+    OpenAI.apiKey = SettingsController.to.openAiKey.value;
+    OpenAI.baseUrl = SettingsController.to.openAiBaseUrl.value;
   }
 
   void _getResponseFromGpt(
@@ -35,7 +35,7 @@ class MessageRepository {
       ValueChanged<Message> onResponse,
       ValueChanged<Message> errorCallback,
       ValueChanged<Message> onSuccess) async {
-    String llm = GetIt.instance.get<UserSettingCubit>().state.llm;
+    String llm = SettingsController.to.llm.value;
 
     switch (llm.toUpperCase()) {
       case "OPENAI":

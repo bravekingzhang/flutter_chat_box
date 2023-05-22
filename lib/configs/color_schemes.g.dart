@@ -67,3 +67,8 @@ const darkColorScheme = ColorScheme(
   outlineVariant: Color(0xFF49454E),
   scrim: Color(0xFF000000),
 );
+
+ThemeData darkTheme =
+    ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
+ThemeData lightTheme =
+    ThemeData(useMaterial3: true, colorScheme: lightColorScheme);
