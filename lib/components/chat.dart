@@ -130,13 +130,13 @@ class _ChatWindowState extends State<ChatWindow> {
     );
   }
 
-  String _newConversation(String name, String description) {
+  Conversation _newConversation(String name, String description) {
     var conversation = Conversation(
       name: name,
       description: description,
       uuid: uuid.v4(),
     );
-    return conversation.uuid;
+    return conversation;
   }
 
   void _sendMessage() {
@@ -149,9 +149,12 @@ class _ChatWindowState extends State<ChatWindow> {
       if (conversationUuid.isEmpty) {
         // new conversation
         //message 的前10个字符，如果message不够10个字符，则全部
-        conversationUuid = _newConversation(
+        var conversation = _newConversation(
             message.substring(0, message.length > 20 ? 20 : message.length),
             message);
+        conversationUuid = conversation.uuid;
+        conversationController.setCurrentConversationUuid(conversationUuid);
+        conversationController.addConversation(conversation);
       }
       final newMessage = Message(
         conversationId: conversationUuid,

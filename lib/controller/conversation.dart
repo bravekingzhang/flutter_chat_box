@@ -15,16 +15,25 @@ class ConversationController extends GetxController {
 
   void setCurrentConversationUuid(String uuid) async {
     currentConversationUuid.value = uuid;
+    update();
   }
 
   void deleteConversation(int index) async {
     Conversation conversation = conversationList[index];
     await ConversationRepository().deleteConversation(conversation.uuid);
     conversationList.value = await ConversationRepository().getConversations();
+    update();
   }
 
   void renameConversation(Conversation conversation) async {
     await ConversationRepository().updateConversation(conversation);
     conversationList.value = await ConversationRepository().getConversations();
+    update();
+  }
+
+  void addConversation(Conversation conversation) async {
+    await ConversationRepository().addConversation(conversation);
+    conversationList.value = await ConversationRepository().getConversations();
+    update();
   }
 }
