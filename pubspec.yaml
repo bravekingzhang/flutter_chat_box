@@ -39,9 +39,6 @@ dependencies:
   path_provider: ^2.0.13
   flutter_easyloading: ^3.0.5
   freezed: ^2.3.2
-  flutter_localizations:
-    sdk: flutter
-  intl: any
   font_awesome_flutter: ^10.4.0
   sqflite: ^2.2.6
   uuid: ^3.0.7
@@ -53,6 +50,7 @@ dependencies:
   package_info_plus: ^3.1.2
   get: ^4.6.5
   flex_color_scheme: ^7.0.5
+  get_storage: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -74,7 +72,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  generate: true # Add this line
+  # generate: true # Add this line
 
 flutter_launcher_icons:
   android: "launcher_icon"

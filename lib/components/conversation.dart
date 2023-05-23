@@ -4,7 +4,6 @@ import 'package:flutter_chatgpt/controller/message.dart';
 import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:flutter_chatgpt/utils/package.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 
 class ConversationWindow extends StatefulWidget {
@@ -28,8 +27,9 @@ class _ConversationWindowState extends State<ConversationWindow> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration:
-          const BoxDecoration(border: Border(right: BorderSide(width: .3))),
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
+          border: const Border(right: BorderSide(width: .1))),
       constraints: const BoxConstraints(maxWidth: 300),
       child: GetX<ConversationController>(builder: (controller) {
         return Column(
@@ -41,7 +41,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                       padding: const EdgeInsets.all(8.0),
                       child: Center(
                         child: Text(
-                          AppLocalizations.of(context)!.noConversationTips,
+                          'noConversationTips'.tr,
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -71,9 +71,9 @@ class _ConversationWindowState extends State<ConversationWindow> {
                       },
                     ),
                   ),
-            const Divider(thickness: .3),
+            const Divider(thickness: .2),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -81,19 +81,25 @@ class _ConversationWindowState extends State<ConversationWindow> {
                     onPressed: () {
                       _showNewConversationDialog(context);
                     },
-                    label: Text(AppLocalizations.of(context)!.newConversation),
+                    label: Text('newConversation'.tr),
                     icon: const Icon(Icons.add_box),
+                  ),
+                  const SizedBox(
+                    height: 6,
                   ),
                   TextButton.icon(
                     onPressed: () {},
                     label: Text("Version：$version"),
                     icon: const Icon(Icons.info),
                   ),
+                  const SizedBox(
+                    height: 6,
+                  ),
                   TextButton.icon(
                     onPressed: () {
                       _showSetting(context);
                     },
-                    label: Text(AppLocalizations.of(context)!.settings),
+                    label: Text('settings'.tr),
                     icon: const Icon(Icons.settings),
                   ),
                 ],
@@ -124,11 +130,11 @@ class _ConversationWindowState extends State<ConversationWindow> {
       items: [
         PopupMenuItem(
           value: "delete",
-          child: Text(AppLocalizations.of(context)!.delete),
+          child: Text('delete'.tr),
         ),
         PopupMenuItem(
           value: "rename",
-          child: Text(AppLocalizations.of(context)!.reName),
+          child: Text('reName'.tr),
         ),
       ],
     ).then((value) {
@@ -143,6 +149,8 @@ class _ConversationWindowState extends State<ConversationWindow> {
   void _showNewConversationDialog(BuildContext context) {
     ConversationController controller = Get.find();
     controller.setCurrentConversationUuid("");
+    MessageController messageController = Get.find();
+    messageController.loadAllMessages("");
   }
 
   void _renameConversation(BuildContext context, int index) {
@@ -221,8 +229,8 @@ class _ConversationWindowState extends State<ConversationWindow> {
           TextFormField(
             controller: controllerGlmBaseUrl,
             decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.gmlBaseUrl,
-              hintText: AppLocalizations.of(context)!.gmlBaseUrl,
+              labelText: 'gmlBaseUrl'.tr,
+              hintText: 'gmlBaseUrl'.tr,
               floatingLabelBehavior: FloatingLabelBehavior.auto,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -249,8 +257,8 @@ class _ConversationWindowState extends State<ConversationWindow> {
           TextFormField(
             controller: controllerApiKey,
             decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.enterKey,
-              hintText: AppLocalizations.of(context)!.enterKeyTips,
+              labelText: 'enterKey'.tr,
+              hintText: 'enterKey'.tr,
               floatingLabelBehavior: FloatingLabelBehavior.auto,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -287,8 +295,8 @@ class _ConversationWindowState extends State<ConversationWindow> {
           DropdownButtonFormField(
             value: settingsController.openAiBaseUrl.value,
             decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.setProxyUrlTips,
-              hintText: AppLocalizations.of(context)!.setProxyUrlTips,
+              labelText: 'setProxyUrlTips'.tr,
+              hintText: 'setProxyUrlTips'.tr,
               floatingLabelBehavior: FloatingLabelBehavior.auto,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -321,8 +329,8 @@ class _ConversationWindowState extends State<ConversationWindow> {
           DropdownButtonFormField(
               value: settingsController.gptModel.value,
               decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.gptModel,
-                hintText: AppLocalizations.of(context)!.gptModel,
+                labelText: 'gptModel'.tr,
+                hintText: 'gptModel'.tr,
                 floatingLabelBehavior: FloatingLabelBehavior.auto,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -355,79 +363,114 @@ class _ConversationWindowState extends State<ConversationWindow> {
         controllerGlmBaseUrl.text = settingsController.glmBaseUrl.value;
         return StatefulBuilder(builder: (context, setState) {
           var children = [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context)!.theme),
-                Switch(
-                  value: Get.theme.brightness == Brightness.dark,
-                  onChanged: (value) {
-                    settingsController.switchTheme();
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 28,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context)!.language),
-                Switch(
-                  value: settingsController.locale.value.languageCode == 'zh',
-                  onChanged: (value) {
-                    settingsController.switchLocale();
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 28,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context)!.useStreamApi),
-                Switch(
-                  value: settingsController.useStream.value,
-                  onChanged: (value) {
-                    settingsController.setUseStream(value);
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 28,
-            ),
-            DropdownButtonFormField(
-              value: settingsController.llm.value,
-              decoration: InputDecoration(
-                labelText: AppLocalizations.of(context)!.llmHint,
-                hintText: AppLocalizations.of(context)!.llmHint,
-                floatingLabelBehavior: FloatingLabelBehavior.auto,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-              ),
-              items: <String>['OpenAI', 'ChatGlm', 'IF']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
+            GetX<SettingsController>(builder: (controller) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: Text('theme'.tr),
                   ),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                if (newValue == null) return;
-                settingsController.setLlm(newValue);
-              },
+                  RadioListTile(
+                    title: const Text('跟随系统'),
+                    value: ThemeMode.system,
+                    groupValue: controller.themeMode.value,
+                    onChanged: (value) {
+                      setState(() {
+                        controller.setThemeMode(
+                            ThemeMode.system); //STEP 3 - change themes
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    title: const Text('暗黑模式'),
+                    value: ThemeMode.dark,
+                    groupValue: controller.themeMode.value,
+                    onChanged: (value) {
+                      controller.setThemeMode(ThemeMode.dark);
+                    },
+                  ),
+                  RadioListTile(
+                    title: const Text('白色模式'),
+                    value: ThemeMode.light,
+                    groupValue: controller.themeMode.value,
+                    onChanged: (value) {
+                      controller.setThemeMode(ThemeMode.light);
+                    },
+                  ),
+                ],
+              );
+            }),
+            const Divider(),
+            GetX<SettingsController>(builder: (controller) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: Text('language'.tr),
+                  ),
+                  RadioListTile(
+                    title: const Text('中文'),
+                    value: 'zh',
+                    groupValue: controller.locale.value.languageCode,
+                    onChanged: (value) {
+                      controller.setLocale(const Locale('zh'));
+                    },
+                  ),
+                  RadioListTile(
+                    title: const Text('英文'),
+                    value: 'en',
+                    groupValue: controller.locale.value.languageCode,
+                    onChanged: (value) {
+                      controller.setLocale(const Locale('en'));
+                    },
+                  ),
+                ],
+              );
+            }),
+            const Divider(),
+            GetX<SettingsController>(builder: (controller) {
+              return SwitchListTile(
+                  title: Text("useStreamApi".tr),
+                  value: controller.useStream.value,
+                  onChanged: (value) {
+                    controller.setUseStream(value);
+                  });
+            }),
+            const SizedBox(
+              height: 28,
             ),
+            GetX<SettingsController>(builder: (controller) {
+              return DropdownButtonFormField(
+                value: controller.llm.value,
+                decoration: InputDecoration(
+                  labelText: 'llmHint'.tr,
+                  hintText: 'llmHint'.tr,
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                ),
+                items: <String>['OpenAI', 'ChatGlm', 'IF']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  if (newValue == null) return;
+                  controller.setLlm(newValue);
+                },
+              );
+            }),
           ];
           if (settingsController.llm.value == "OpenAI") {
             children.addAll(openAiModelSettings(setState));
@@ -436,7 +479,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
             children.addAll(chatGlMModelSettings(setState));
           }
           return AlertDialog(
-            title: Text(AppLocalizations.of(context)!.settings),
+            title: Text('settings'.tr),
             content: SingleChildScrollView(
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.6,
@@ -452,7 +495,7 @@ class _ConversationWindowState extends State<ConversationWindow> {
                   settingsController.setGlmBaseUrl(controllerGlmBaseUrl.text);
                   Navigator.of(context).pop();
                 },
-                child: Text(AppLocalizations.of(context)!.ok),
+                child: Text('ok'.tr),
               ),
             ],
           );

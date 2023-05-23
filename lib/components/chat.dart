@@ -8,7 +8,6 @@ import 'package:flutter_chatgpt/controller/message.dart';
 import 'package:flutter_chatgpt/controller/prompt.dart';
 import 'package:flutter_chatgpt/device/form_factor.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
@@ -99,9 +98,8 @@ class _ChatWindowState extends State<ChatWindow> {
                       child: TextFormField(
                         controller: _controller,
                         decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.inputPrompt,
-                          hintText:
-                              AppLocalizations.of(context)!.inputPromptTips,
+                          labelText: "inputPrompt".tr,
+                          hintText: "inputPromptTips".tr,
                           floatingLabelBehavior: FloatingLabelBehavior.auto,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 8),

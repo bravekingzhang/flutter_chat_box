@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/components/chat.dart';
 import 'package:flutter_chatgpt/components/conversation.dart';
 import 'package:flutter_chatgpt/device/form_factor.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get/get.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
@@ -13,7 +13,7 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: useTabs
           ? AppBar(
-              title: Text(AppLocalizations.of(context)!.appTitle),
+              title: Text('appTitle'.tr),
             )
           : null,
       drawer: useTabs ? const ConversationWindow() : null,

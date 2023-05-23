@@ -1,15 +1,18 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/controller/conversation.dart';
 import 'package:flutter_chatgpt/controller/message.dart';
 import 'package:flutter_chatgpt/controller/prompt.dart';
 import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:flutter_chatgpt/pages/unknown.dart';
+import 'package:flutter_chatgpt/translations.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_chatgpt/route.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_storage/get_storage.dart';
 
 void main() async {
+  await GetStorage.init();
   runApp(const MyApp());
 }
 
@@ -18,10 +21,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //   Get.lazyPut(() => SettingsController());
-    // Get.lazyPut(() => ConversationController());
-    // Get.lazyPut(() => MessageController());
-    // Get.lazyPut(() => PromptController());
     Get.put(SettingsController());
     Get.put(ConversationController());
     Get.put(MessageController());
@@ -31,12 +30,11 @@ class MyApp extends StatelessWidget {
       getPages: routes,
       unknownRoute:
           GetPage(name: '/not_found', page: () => const UnknownRoutePage()),
-      theme: ThemeData.light().copyWith(primaryColor: Colors.green),
-      darkTheme: ThemeData.dark().copyWith(primaryColor: Colors.purple),
+      theme: FlexThemeData.light(scheme: FlexScheme.ebonyClay),
+      darkTheme: FlexThemeData.dark(scheme: FlexScheme.ebonyClay),
       themeMode: ThemeMode.system,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: SettingsController.to.locale.value,
+      locale: const Locale('zh'),
+      translations: MyTranslations(),
       builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,
     );

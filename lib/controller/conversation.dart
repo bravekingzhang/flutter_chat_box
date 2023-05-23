@@ -13,7 +13,7 @@ class ConversationController extends GetxController {
     super.onInit();
   }
 
-  void setCurrentConversationUuid(String uuid) {
+  void setCurrentConversationUuid(String uuid) async {
     currentConversationUuid.value = uuid;
   }
 
