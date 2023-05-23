@@ -2,6 +2,7 @@ import 'package:dart_openai/openai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
+import 'package:get_storage/get_storage.dart';
 
 abstract class LLM {
   getResponse(List<Message> messages, ValueChanged<Message> onResponse,
@@ -40,7 +41,7 @@ class ChatGpt extends LLM {
     if (SettingsController.to.useStream.value) {
       Stream<OpenAIStreamChatCompletionModel> chatStream = OpenAI.instance.chat
           .createStream(
-              model: SettingsController.to.gptModel.value,
+              model: GetStorage().read("gptModel") ?? "gpt-3.5-turbo",
               messages: openAIMessages);
       chatStream.listen(
         (chatStreamEvent) {
@@ -61,7 +62,7 @@ class ChatGpt extends LLM {
     } else {
       try {
         var response = await OpenAI.instance.chat.create(
-          model: SettingsController.to.gptModel.value,
+          model: GetStorage().read("gptModel") ?? "gpt-3.5-turbo",
           messages: openAIMessages,
         );
         message.text = response.choices.first.message.content;

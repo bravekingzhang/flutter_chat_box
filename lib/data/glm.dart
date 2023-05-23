@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:flutter_chatgpt/data/llm.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
+import 'package:get_storage/get_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +17,7 @@ class ChatGlM extends LLM {
     var prompt = messageToBeSend.text;
     var history = messages.length >= 2 ? collectHistory(messages) : [];
     var body = {'query': prompt, 'history': history.isEmpty ? [] : history};
-    var glmBaseUrl = SettingsController.to.glmBaseUrl.value;
+    var glmBaseUrl = GetStorage().read("glmBaseUrl") ?? "";
     if (glmBaseUrl.isEmpty) {
       errorCallback(Message(
         text: "glm baseUrl is empty,please set you glmBaseUrl first",

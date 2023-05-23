@@ -43,6 +43,14 @@ class SettingsController extends GetxController {
 
   void setGlmBaseUrl(String baseUrl) {
     glmBaseUrl.value = baseUrl;
+    GetStorage _box = GetStorage();
+    _box.write('glmBaseUrl', baseUrl);
+  }
+
+  getGlmBaseUrlFromPreferences() async {
+    GetStorage _box = GetStorage();
+    String baseUrl = _box.read('glmBaseUrl') ?? "https://api.openai-proxy.com";
+    setGlmBaseUrl(baseUrl);
   }
 
   void setOpenAiKey(String text) {
@@ -59,6 +67,7 @@ class SettingsController extends GetxController {
 
   void setOpenAiBaseUrl(String baseUrl) {
     openAiBaseUrl.value = baseUrl;
+    update();
     GetStorage _box = GetStorage();
     _box.write('openAiBaseUrl', baseUrl);
   }
