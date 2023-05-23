@@ -1,4 +1,4 @@
-import 'package:dart_openai/openai.dart';
+import 'package:dart_openai/dart_openai.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

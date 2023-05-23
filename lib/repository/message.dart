@@ -1,4 +1,4 @@
-import 'package:dart_openai/openai.dart';
+import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:flutter_chatgpt/data/glm.dart';

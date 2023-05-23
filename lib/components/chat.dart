@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chatgpt/components/markdown.dart';
@@ -261,7 +262,7 @@ class _ChatWindowState extends State<ChatWindow> {
         ),
         itemCount: prompts.length,
         itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
+          return InkWell(
             onTap: () => {_controller.text = (prompts[index].prompt)},
             child: Container(
               margin: const EdgeInsets.all(8),
@@ -303,7 +304,7 @@ class _ChatWindowState extends State<ChatWindow> {
         controller: _scrollController,
         itemCount: prompts.length,
         itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
+          return InkWell(
             onTap: () => {_controller.text = prompts[index].prompt},
             child: Container(
               margin: const EdgeInsets.all(8),

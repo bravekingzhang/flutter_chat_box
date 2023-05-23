@@ -42,15 +42,15 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   sqflite: ^2.2.6
   uuid: ^3.0.7
-  dart_openai: ^1.8.4
   markdown_widget: ^2.1.0
-  flutter_math_fork: ^0.6.3+1
+  flutter_math_fork: ^0.7.1
   markdown: ^7.0.2
   flutter_launcher_icons: ^0.13.1
-  package_info_plus: ^3.1.2
+  package_info_plus: ^4.0.1
   get: ^4.6.5
   flex_color_scheme: ^7.0.5
   get_storage: ^2.1.1
+  dart_openai: ^1.9.92
 
 dev_dependencies:
   flutter_test:

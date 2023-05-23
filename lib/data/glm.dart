@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:flutter_chatgpt/data/llm.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:get_storage/get_storage.dart';
