@@ -12,6 +12,7 @@ class MyTranslations extends Translations {
               "There seems to be no session, click on the left to create one quickly, or simply type prompt to create one",
           "newConversation": "New Conversation",
           "renameConversation": "Rename Conversation",
+          "enterNewName": "Enter new name",
           "settings": "Settings",
           "theme": "switch theme",
           "language": "switch language",
@@ -31,13 +32,14 @@ class MyTranslations extends Translations {
           "gmlBaseUrl": "Please input chatglm base url"
         },
         'zh_CN': {
-          "appTitle": "智能助手",
+          "appTitle": "ChatBot",
           "toSecondPage": "去到第二页",
           "secondPage": "这里上第二页",
           "countTimes": "当前的数字是：",
           "noConversationTips": "似乎没有会话，点击左侧快速创建一个，或简单地键入提示创建一个",
           "newConversation": "创建新会话",
           "renameConversation": "重命名会话",
+          "enterNewName": "输入新的名字",
           "settings": "设置",
           "theme": "切换主题",
           "language": "切换语言",

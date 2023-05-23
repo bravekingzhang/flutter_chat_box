@@ -1,35 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/components/chat.dart';
 import 'package:flutter_chatgpt/components/conversation.dart';
-import 'package:flutter_chatgpt/device/form_factor.dart';
 import 'package:get/get.dart';
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+class MyHomePage extends GetResponsiveView {
+  @override
+  Widget? phone() {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('appTitle'.tr),
+      ),
+      drawer: const ConversationWindow(),
+      body: const ChatWindow(),
+    );
+  }
 
   @override
-  Widget build(BuildContext context) {
-    bool useTabs = MediaQuery.of(context).size.width < FormFactor.tablet;
+  Widget? desktop() {
     return Scaffold(
-      appBar: useTabs
-          ? AppBar(
-              title: Text('appTitle'.tr),
-            )
-          : null,
-      drawer: useTabs ? const ConversationWindow() : null,
-      body: Stack(
-        children: [
-          useTabs
-              ? Row(
-                  children: const [
-                    ChatWindow(),
-                  ],
-                )
-              : Row(
-                  children: const [ConversationWindow(), ChatWindow()],
-                ),
+      body: Row(
+        children: const [
+          ConversationWindow(),
+          Expanded(child: ChatWindow()),
         ],
       ),
     );
   }
+
+  @override
+  Widget? builder() {
+    return super.builder();
+  }
+
+  // @override
+  // Widget builder() {
+  //   bool useTabs = screen.isPhone || screen.isTablet;
+  //   return Scaffold(
+  //     appBar: useTabs
+  //         ? AppBar(
+  //             title: Text('appTitle'.tr),
+  //           )
+  //         : null,
+  //     drawer: useTabs ? const ConversationWindow() : null,
+  //     body: Stack(
+  //       children: [
+  //         useTabs
+  //             ? Row(
+  //                 children: const [
+  //                   ChatWindow(),
+  //                 ],
+  //               )
+  //             : Row(
+  //                 children: const [ConversationWindow(), ChatWindow()],
+  //               ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

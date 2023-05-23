@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chatgpt/configs/color_schemes.g.dart';
+import 'package:flutter_chatgpt/utils/package.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class SettingsController extends GetxController {
+  final isObscure = true.obs;
   final openAiKey = "".obs;
   final glmBaseUrl = "".obs;
 
@@ -16,9 +17,11 @@ class SettingsController extends GetxController {
 
   final locale = const Locale('zh').obs;
 
-  final useStream = false.obs;
+  final useStream = true.obs;
 
   final llm = "OpenAI".obs;
+
+  final version = "1.0.0".obs;
 
   static SettingsController get to => Get.find();
 
@@ -28,7 +31,14 @@ class SettingsController extends GetxController {
     await getLocaleFromPreferences();
     await getOpenAiBaseUrlFromPreferences();
     await getOpenAiKeyFromPreferences();
+    await getGptModelFromPreferences();
+    await getUseStreamFromPreferences();
+    await initAppVersion();
     super.onInit();
+  }
+
+  initAppVersion() async {
+    version.value = await getAppVersion();
   }
 
   void setGlmBaseUrl(String baseUrl) {
@@ -62,6 +72,14 @@ class SettingsController extends GetxController {
 
   void setGptModel(String text) {
     gptModel.value = text;
+    GetStorage _box = GetStorage();
+    _box.write('gptModel', text);
+  }
+
+  getGptModelFromPreferences() async {
+    GetStorage _box = GetStorage();
+    String model = _box.read('gptModel') ?? "gpt-3.5-turbo";
+    setGptModel(model);
   }
 
   void setThemeMode(ThemeMode model) async {
@@ -103,7 +121,13 @@ class SettingsController extends GetxController {
   void setUseStream(bool value) {
     useStream.value = value;
     GetStorage _box = GetStorage();
-    _box.write('useStream', value.toString());
+    _box.write('useStream', value);
+  }
+
+  getUseStreamFromPreferences() async {
+    GetStorage _box = GetStorage();
+    bool useStream = _box.read('useStream') ?? true;
+    setUseStream(useStream);
   }
 
   void setLlm(String text) {

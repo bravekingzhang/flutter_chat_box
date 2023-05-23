@@ -6,7 +6,6 @@ import 'package:flutter_chatgpt/components/markdown.dart';
 import 'package:flutter_chatgpt/controller/conversation.dart';
 import 'package:flutter_chatgpt/controller/message.dart';
 import 'package:flutter_chatgpt/controller/prompt.dart';
-import 'package:flutter_chatgpt/device/form_factor.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -25,116 +24,107 @@ class _ChatWindowState extends State<ChatWindow> {
   final _controller = TextEditingController();
   final _formKey = GlobalKey<FormState>(); // 定义一个 GlobalKey
   final _scrollController = ScrollController();
-  final ConversationController conversationController =
-      Get.put(ConversationController());
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Expanded(
-              child: Scrollbar(
-                controller: _scrollController,
-                thumbVisibility: true,
-                child: GetX<MessageController>(
-                  builder: (controller) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      _scrollToNewMessage();
-                    });
-                    if (controller.messageList.isNotEmpty) {
-                      return ListView.builder(
-                        controller: _scrollController,
-                        itemCount: controller.messageList.length,
-                        itemBuilder: (context, index) {
-                          return _buildMessageCard(
-                              controller.messageList[index]);
-                        },
-                      );
-                    } else {
-                      return GetX<PromptController>(builder: ((controller) {
-                        if (controller.prompts.isEmpty) {
-                          return ListView(
-                              controller: _scrollController,
-                              children: const [
-                                Center(
-                                  child: Center(child: Text("正在加载prompts...")),
-                                )
-                              ]);
-                        } else if (controller.prompts.isNotEmpty) {
-                          return _buildExpandEmptyListView(controller.prompts);
-                        } else {
-                          return ListView(
-                              controller: _scrollController,
-                              children: const [
-                                Center(
-                                  child: Center(
-                                      child: Text("加载prompts列表失败，请检查网络")),
-                                )
-                              ]);
-                        }
-                      }));
-                    }
-                  },
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Expanded(
+            child: Scrollbar(
+              controller: _scrollController,
+              thumbVisibility: true,
+              child: GetX<MessageController>(
+                builder: (controller) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _scrollToNewMessage();
+                  });
+                  if (controller.messageList.isNotEmpty) {
+                    return ListView.builder(
+                      controller: _scrollController,
+                      itemCount: controller.messageList.length,
+                      itemBuilder: (context, index) {
+                        return _buildMessageCard(controller.messageList[index]);
+                      },
+                    );
+                  } else {
+                    return GetX<PromptController>(builder: ((controller) {
+                      if (controller.prompts.isEmpty) {
+                        return ListView(
+                            controller: _scrollController,
+                            children: const [
+                              Center(
+                                child: Center(child: Text("正在加载prompts...")),
+                              )
+                            ]);
+                      } else if (controller.prompts.isNotEmpty) {
+                        return _buildExpandEmptyListView(controller.prompts);
+                      } else {
+                        return ListView(
+                            controller: _scrollController,
+                            children: const [
+                              Center(
+                                child:
+                                    Center(child: Text("加载prompts列表失败，请检查网络")),
+                              )
+                            ]);
+                      }
+                    }));
+                  }
+                },
               ),
             ),
-            const SizedBox(height: 16),
-            Form(
-              key: _formKey, // 将 GlobalKey 赋值给 Form 组件的 key 属性
-              child: RawKeyboardListener(
-                focusNode: FocusNode(),
-                onKey: _handleKeyEvent,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _controller,
-                        decoration: InputDecoration(
-                          labelText: "inputPrompt".tr,
-                          hintText: "inputPromptTips".tr,
-                          floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
+          ),
+          const SizedBox(height: 16),
+          Form(
+            key: _formKey, // 将 GlobalKey 赋值给 Form 组件的 key 属性
+            child: RawKeyboardListener(
+              focusNode: FocusNode(),
+              onKey: _handleKeyEvent,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      style: const TextStyle(fontSize: 13),
+                      controller: _controller,
+                      keyboardType: TextInputType.multiline,
+                      decoration: InputDecoration(
+                        labelText: "inputPrompt".tr,
+                        hintText: "inputPromptTips".tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
                         ),
-                        autovalidateMode: AutovalidateMode.always,
-                        maxLines: null,
+                        filled: true,
                       ),
+                      autovalidateMode: AutovalidateMode.always,
+                      maxLines: null,
                     ),
-                    const SizedBox(width: 16),
-                    SizedBox(
-                      height: 48,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _sendMessage();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shape: const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8))),
-                          padding: EdgeInsets.zero,
-                        ),
-                        child: const Icon(Icons.send),
+                  ),
+                  const SizedBox(width: 16),
+                  SizedBox(
+                    height: 48,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _sendMessage();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        padding: EdgeInsets.zero,
                       ),
+                      child: const Icon(Icons.send),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -257,11 +247,13 @@ class _ChatWindowState extends State<ChatWindow> {
   void _scrollToNewMessage() {
     if (_scrollController.hasClients) {
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      // _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+      //     duration: const Duration(milliseconds: 800), curve: Curves.ease);
     }
   }
 
   Widget _buildExpandEmptyListView(List<Prompt> prompts) {
-    if (MediaQuery.of(context).size.width > FormFactor.tablet) {
+    if (MediaQuery.of(context).size.width > 400) {
       return GridView.builder(
         controller: _scrollController,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -283,10 +275,10 @@ class _ChatWindowState extends State<ChatWindow> {
                 children: [
                   Text(
                     prompts[index].act,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary),
                     maxLines: 1,
                     overflow: TextOverflow.fade,
                   ),
@@ -294,11 +286,10 @@ class _ChatWindowState extends State<ChatWindow> {
                   Expanded(
                     child: Text(
                       prompts[index].prompt,
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
                       overflow: TextOverflow.ellipsis,
-                      maxLines: 4,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary),
+                      maxLines: 5,
                     ),
                   )
                 ],
@@ -334,6 +325,8 @@ class _ChatWindowState extends State<ChatWindow> {
                   const SizedBox(height: 10),
                   Text(
                     prompts[index].prompt,
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 16,
                     ),
@@ -353,7 +346,6 @@ List<Color?> sMaterialColor = [
   Colors.green[300],
   Colors.purple[300],
   Colors.red[300],
-  Colors.yellow[300],
   Colors.pink[300],
   Colors.orange[300],
   Colors.teal[300],

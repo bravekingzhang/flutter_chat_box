@@ -5,7 +5,7 @@ import 'package:flutter_chatgpt/controller/message.dart';
 import 'package:flutter_chatgpt/controller/prompt.dart';
 import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:flutter_chatgpt/pages/unknown.dart';
-import 'package:flutter_chatgpt/translations.dart';
+import 'package:flutter_chatgpt/configs/translations.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_chatgpt/route.dart';
 import 'package:get/get.dart';
@@ -13,6 +13,7 @@ import 'package:get_storage/get_storage.dart';
 
 void main() async {
   await GetStorage.init();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
