@@ -199,6 +199,7 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                       filled: true,
                     ),
                     items: <String>[
+                      'https://ai.fakeopen.com/',
                       'https://api.openai-proxy.com',
                       'https://api.openai.com'
                     ].map<DropdownMenuItem<String>>((String value) {
