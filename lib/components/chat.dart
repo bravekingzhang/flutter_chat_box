@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chatgpt/components/markdown.dart';
+import 'package:flutter_chatgpt/components/prompts.dart';
 import 'package:flutter_chatgpt/controller/conversation.dart';
 import 'package:flutter_chatgpt/controller/message.dart';
 import 'package:flutter_chatgpt/controller/prompt.dart';
@@ -33,48 +33,35 @@ class _ChatWindowState extends State<ChatWindow> {
       child: Column(
         children: [
           Expanded(
-            child: Scrollbar(
-              controller: _scrollController,
-              thumbVisibility: true,
-              child: GetX<MessageController>(
-                builder: (controller) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _scrollToNewMessage();
-                  });
-                  if (controller.messageList.isNotEmpty) {
-                    return ListView.builder(
-                      controller: _scrollController,
-                      itemCount: controller.messageList.length,
-                      itemBuilder: (context, index) {
-                        return _buildMessageCard(controller.messageList[index]);
-                      },
-                    );
-                  } else {
-                    return GetX<PromptController>(builder: ((controller) {
-                      if (controller.prompts.isEmpty) {
-                        return ListView(
-                            controller: _scrollController,
-                            children: const [
-                              Center(
-                                child: Center(child: Text("正在加载prompts...")),
-                              )
-                            ]);
-                      } else if (controller.prompts.isNotEmpty) {
-                        return _buildExpandEmptyListView(controller.prompts);
-                      } else {
-                        return ListView(
-                            controller: _scrollController,
-                            children: const [
-                              Center(
-                                child:
-                                    Center(child: Text("加载prompts列表失败，请检查网络")),
-                              )
-                            ]);
-                      }
-                    }));
-                  }
-                },
-              ),
+            child: GetX<MessageController>(
+              builder: (controller) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _scrollToNewMessage();
+                });
+                if (controller.messageList.isNotEmpty) {
+                  return ListView.builder(
+                    controller: _scrollController,
+                    itemCount: controller.messageList.length,
+                    itemBuilder: (context, index) {
+                      return _buildMessageCard(controller.messageList[index]);
+                    },
+                  );
+                } else {
+                  return GetX<PromptController>(builder: ((controller) {
+                    if (controller.prompts.isEmpty) {
+                      return const Center(
+                        child: Center(child: Text("正在加载prompts...")),
+                      );
+                    } else if (controller.prompts.isNotEmpty) {
+                      return PromptsView(controller.prompts, (value) {
+                        _controller.text = value;
+                      });
+                    } else {
+                      return const Center(child: Text("加载prompts列表失败，请检查网络"));
+                    }
+                  }));
+                }
+              },
             ),
           ),
           const SizedBox(height: 16),
@@ -171,9 +158,9 @@ class _ChatWindowState extends State<ChatWindow> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: const [
+            children: [
               FaIcon(FontAwesomeIcons.person),
               SizedBox(
                 width: 5,
@@ -251,110 +238,6 @@ class _ChatWindowState extends State<ChatWindow> {
   void _scrollToNewMessage() {
     if (_scrollController.hasClients) {
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-      // _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-      //     duration: const Duration(milliseconds: 800), curve: Curves.ease);
     }
   }
-
-  Widget _buildExpandEmptyListView(List<Prompt> prompts) {
-    if (MediaQuery.of(context).size.width > 400) {
-      return GridView.builder(
-        controller: _scrollController,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-        ),
-        itemCount: prompts.length,
-        itemBuilder: (BuildContext context, int index) {
-          return InkWell(
-            onTap: () => {_controller.text = (prompts[index].prompt)},
-            child: Container(
-              margin: const EdgeInsets.all(8),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: getRandomColor() as Color,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    prompts[index].act,
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary),
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
-                  ),
-                  const SizedBox(height: 10),
-                  Expanded(
-                    child: Text(
-                      prompts[index].prompt,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary),
-                      maxLines: 5,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    } else {
-      return ListView.builder(
-        controller: _scrollController,
-        itemCount: prompts.length,
-        itemBuilder: (BuildContext context, int index) {
-          return InkWell(
-            onTap: () => {_controller.text = prompts[index].prompt},
-            child: Container(
-              margin: const EdgeInsets.all(8),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: getRandomColor() as Color,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    prompts[index].act,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    prompts[index].prompt,
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    }
-  }
-}
-
-List<Color?> sMaterialColor = [
-  Colors.blue[300],
-  Colors.green[300],
-  Colors.purple[300],
-  Colors.red[300],
-  Colors.pink[300],
-  Colors.orange[300],
-  Colors.teal[300],
-  Colors.brown[300],
-];
-Color? getRandomColor() {
-  return sMaterialColor[Random().nextInt(sMaterialColor.length)];
 }
