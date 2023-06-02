@@ -69,3 +69,6 @@ release dir 可以直接下载 release 版本，也可以:
 如果你觉得对你有用，就请我一杯咖啡。
 
 <img src="https://github.com/bravekingzhang/utools-code2flow-official/blob/main/shoukuanma.png" alt="收款码" style="width: 40%;" />
+
+License: MIT
+本项目采用 MIT 许可证授权。
