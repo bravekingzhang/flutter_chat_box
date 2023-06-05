@@ -64,6 +64,8 @@ release dir 可以直接下载 release 版本，也可以:
 
 <img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/qunliao.pic.jpg"  style="width: 50%;">
 
+添加我，注明自己 github 账号名，加入群聊。
+
 # 给我打 call
 
 如果你觉得对你有用，就请我一杯咖啡。
