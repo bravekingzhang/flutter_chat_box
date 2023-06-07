@@ -11,7 +11,7 @@ SpanNodeGeneratorWithTag latexGenerator = SpanNodeGeneratorWithTag(
 const _latexTag = 'latex';
 
 class LatexSyntax extends m.InlineSyntax {
-  LatexSyntax() : super(r'(\$\$[\s\S]+\$\$)|(\$.+\$)');
+  LatexSyntax() : super(r'\$\$([\s\S]+?)\$\$|\$([\s\S]+?)\$');
 
   @override
   bool onMatch(m.InlineParser parser, Match match) {
