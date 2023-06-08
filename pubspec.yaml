@@ -42,7 +42,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   sqflite: ^2.2.6
   uuid: ^3.0.7
-  markdown_widget: ^2.1.0
+  markdown_widget: ^2.2.0
   flutter_math_fork: ^0.7.1
   markdown: ^7.0.2
   flutter_launcher_icons: ^0.13.1
