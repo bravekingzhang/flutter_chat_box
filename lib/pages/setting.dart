@@ -244,6 +244,13 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                     items: <String>[
                       'gpt-3.5-turbo',
                       'gpt-3.5-turbo-0301',
+                      'gpt-3.5-turbo-16k',
+                      'gpt-3.5-turbo-0613',
+                      'gpt-3.5-turbo-16k-0613',
+                      'gpt-4',
+                      'gpt-4-0613',
+                      'gpt-4-32k',
+                      'gpt-4-32k-0613'
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
