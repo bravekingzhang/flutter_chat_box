@@ -35,33 +35,38 @@ class ConversationWindow extends StatelessWidget {
                     child: ListView.builder(
                       itemCount: controller.conversationList.length,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          onTap: () {
-                            _tapConversation(index);
-                          },
-                          selected: controller.currentConversationUuid.value ==
-                              controller.conversationList[index].uuid,
-                          leading: Icon(
-                            Icons.chat,
-                            color: Theme.of(context).colorScheme.primary,
+                        return Card(
+                          elevation: 1,
+                          child: ListTile(
+                            onTap: () {
+                              _tapConversation(index);
+                            },
+                            selected:
+                                controller.currentConversationUuid.value ==
+                                    controller.conversationList[index].uuid,
+                            leading: Icon(
+                              Icons.chat,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            title: Text(
+                              controller.conversationList[index].name,
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: Theme.of(context).colorScheme.primary),
+                            ),
+                            trailing: Builder(builder: (context) {
+                              return IconButton(
+                                  onPressed: () {
+                                    //显示一个overlay操作
+                                    _showConversationDetail(context, index);
+                                  },
+                                  icon: Icon(
+                                    Icons.more_horiz,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ));
+                            }),
                           ),
-                          title: Text(
-                            controller.conversationList[index].name,
-                            style: TextStyle(
-                                fontSize: 13,
-                                color: Theme.of(context).colorScheme.primary),
-                          ),
-                          trailing: Builder(builder: (context) {
-                            return IconButton(
-                                onPressed: () {
-                                  //显示一个overlay操作
-                                  _showConversationDetail(context, index);
-                                },
-                                icon: Icon(
-                                  Icons.more_horiz,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ));
-                          }),
                         );
                       },
                     ),

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chatgpt/components/markdown.dart';
@@ -182,6 +180,7 @@ class _ChatWindowState extends State<ChatWindow> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Card(
+                    color: Colors.blue[100],
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: SelectableText(
@@ -216,6 +215,7 @@ class _ChatWindowState extends State<ChatWindow> {
             children: [
               Expanded(
                 child: Card(
+                  elevation: 8,
                   margin: const EdgeInsets.all(8),
                   child: Markdown(text: message.text),
                 ),
