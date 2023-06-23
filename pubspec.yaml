@@ -51,6 +51,7 @@ dependencies:
   flex_color_scheme: ^7.0.5
   get_storage: ^2.1.1
   dart_openai: ^1.9.92
+  sqflite_common_ffi: ^2.2.5
 
 dev_dependencies:
   flutter_test:
