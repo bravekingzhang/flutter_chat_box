@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:vibration/vibration.dart';
 
 abstract class LLM {
   getResponse(List<Message> messages, ValueChanged<Message> onResponse,
@@ -44,10 +45,19 @@ class ChatGpt extends LLM {
               model: GetStorage().read("gptModel") ?? "gpt-3.5-turbo",
               messages: openAIMessages);
       chatStream.listen(
-        (chatStreamEvent) {
+        (chatStreamEvent) async {
           if (chatStreamEvent.choices.first.delta.content != null) {
             message.text =
                 message.text + chatStreamEvent.choices.first.delta.content!;
+            try {
+              var hasVibration = await Vibration.hasVibrator();
+              if (hasVibration != null && hasVibration) {
+                Vibration.vibrate(duration: 50, amplitude: 50);
+              }
+            } catch (e) {
+              // ignore
+            }
+
             onResponse(message);
           }
         },
