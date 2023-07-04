@@ -7,8 +7,13 @@ import 'package:get/get.dart';
 class PromptsView extends GetResponsiveView {
   final List<Prompt> prompts;
   final ValueChanged<String> onPromptClick;
+  final promptBgColorMap = <String, Color>{};
 
-  PromptsView(this.prompts, this.onPromptClick);
+  PromptsView(this.prompts, this.onPromptClick, {super.key}) {
+    for (var element in prompts) {
+      promptBgColorMap[element.act] = getRandomColor() as Color;
+    }
+  }
 
   final _scrollController = ScrollController();
 
@@ -27,7 +32,7 @@ class PromptsView extends GetResponsiveView {
             margin: const EdgeInsets.all(8),
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: getRandomColor() as Color,
+              color: promptBgColorMap[prompts[index].act],
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -72,7 +77,7 @@ class PromptsView extends GetResponsiveView {
             margin: const EdgeInsets.all(8),
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: getRandomColor() as Color,
+              color: promptBgColorMap[prompts[index].act],
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
