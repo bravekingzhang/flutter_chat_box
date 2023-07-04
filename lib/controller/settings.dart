@@ -19,6 +19,8 @@ class SettingsController extends GetxController {
 
   final useStream = true.obs;
 
+  final useWebSearch = false.obs;
+
   final llm = "OpenAI".obs;
 
   final version = "1.0.0".obs;
@@ -137,6 +139,18 @@ class SettingsController extends GetxController {
     GetStorage _box = GetStorage();
     bool useStream = _box.read('useStream') ?? true;
     setUseStream(useStream);
+  }
+
+  void setUseWebSearch(bool value) {
+    useWebSearch.value = value;
+    GetStorage _box = GetStorage();
+    _box.write('useWebSearch', value);
+  }
+
+  void getUseWebSearchFromPreferences() async {
+    GetStorage _box = GetStorage();
+    bool useWebSearch = _box.read('useWebSearch') ?? false;
+    setUseWebSearch(useWebSearch);
   }
 
   void setLlm(String text) {

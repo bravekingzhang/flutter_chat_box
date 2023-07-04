@@ -78,6 +78,17 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                   controller.setUseStream(value);
                 }),
             const Divider(),
+            SwitchListTile(
+                title: Text(
+                  "useWebSearch".tr,
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+                value: controller.useWebSearch.value,
+                onChanged: (value) {
+                  controller.setUseWebSearch(value);
+                }),
+            const Divider(),
             DropdownButtonFormField(
               value: controller.llm.value,
               decoration: InputDecoration(
@@ -243,10 +254,7 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                     ),
                     items: <String>[
                       'gpt-3.5-turbo',
-                      'gpt-3.5-turbo-0301',
                       'gpt-3.5-turbo-16k',
-                      'gpt-3.5-turbo-0613',
-                      'gpt-3.5-turbo-16k-0613',
                       'gpt-4',
                       'gpt-4-0613',
                       'gpt-4-32k',

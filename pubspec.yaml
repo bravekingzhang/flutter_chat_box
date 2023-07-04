@@ -52,6 +52,7 @@ dependencies:
   get_storage: ^2.1.1
   dart_openai: ^1.9.92
   vibration: ^1.8.1
+  html: ^0.15.4
 
 dev_dependencies:
   flutter_test:

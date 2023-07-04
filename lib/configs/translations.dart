@@ -54,6 +54,7 @@ class MyTranslations extends Translations {
           "ok": "确定",
           "cancel": "取消",
           "useStreamApi": "使用流式(Stream) API",
+          "useWebSearch": "使用 Web 搜索",
           "gptModel": "选择 GPT Model",
           "llmHint": "选择大语言模型",
           "gmlBaseUrl": "请输入chatglm代理Url"
