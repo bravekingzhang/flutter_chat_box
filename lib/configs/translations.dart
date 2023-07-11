@@ -29,7 +29,8 @@ class MyTranslations extends Translations {
           "useStreamApi": "Use Stream API",
           "gptModel": "Select GPT Model",
           "llmHint": "Select LLM Model",
-          "gmlBaseUrl": "Please input chatglm base url"
+          "youCode": "please input your you code",
+          "youCodeTips": "yk-xxxx-xxxx-xxxx-xxxx"
         },
         'zh_CN': {
           "appTitle": "ChatBot",
@@ -57,7 +58,8 @@ class MyTranslations extends Translations {
           "useWebSearch": "使用 Web 搜索",
           "gptModel": "选择 GPT Model",
           "llmHint": "选择大语言模型",
-          "gmlBaseUrl": "请输入chatglm代理Url"
+          "youCode": "请输入输入又又大佬的邀请码",
+          "youCodeTips": "yk-xxxx-xxxx-xxxx-xxxx"
         }
       };
 }

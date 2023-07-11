@@ -106,7 +106,7 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                 ),
                 filled: true,
               ),
-              items: <String>['OpenAI', 'ChatGlm', 'IF']
+              items: <String>['OpenAI', 'You', 'IF']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -121,12 +121,12 @@ class SettingPage extends GetResponsiveView<SettingsController> {
               },
             ),
             const Divider(),
-            controller.llm.value == "ChatGlm"
+            controller.llm.value == "You"
                 ? TextFormField(
-                    initialValue: controller.glmBaseUrl.value,
+                    initialValue: controller.youCode.value,
                     decoration: InputDecoration(
-                      labelText: 'gmlBaseUrl'.tr,
-                      hintText: 'gmlBaseUrl'.tr,
+                      labelText: 'youCode'.tr,
+                      hintText: 'youCodeTips'.tr,
                       labelStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(Get.context!).colorScheme.primary),
@@ -143,10 +143,13 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                     maxLines: 1,
                     onEditingComplete: () {},
                     onFieldSubmitted: (value) {
-                      controller.setGlmBaseUrl(value);
+                      controller.setYouCode(value);
                     },
                   )
                 : const SizedBox(),
+            const SizedBox(
+              height: 20,
+            ),
             controller.llm.value == "OpenAI"
                 ? TextFormField(
                     initialValue: controller.openAiKey.value,
@@ -190,7 +193,7 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                     height: 20,
                   )
                 : const SizedBox(),
-            controller.llm.value == "OpenAI"
+            controller.llm.value == "OpenAI" || controller.llm.value == "You"
                 ? DropdownButtonFormField(
                     value: controller.openAiBaseUrl.value,
                     isExpanded: true,
@@ -210,9 +213,10 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                       filled: true,
                     ),
                     items: <String>[
-                      'https://ai.fakeopen.com/',
+                      'https://ai.fakeopen.com',
                       'https://api.openai-proxy.com',
-                      'https://api.openai.com'
+                      'https://api.openai.com',
+                      'https://bard.brzhang.club'
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -228,12 +232,12 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                     },
                   )
                 : const SizedBox(),
-            controller.llm.value == "OpenAI"
+            controller.llm.value == "OpenAI" || controller.llm.value == "You"
                 ? const SizedBox(
                     height: 20,
                   )
                 : const SizedBox(),
-            controller.llm.value == "OpenAI"
+            controller.llm.value == "OpenAI" || controller.llm.value == "You"
                 ? DropdownButtonFormField(
                     value: controller.gptModel.value,
                     isExpanded: true,
@@ -256,9 +260,8 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                       'gpt-3.5-turbo',
                       'gpt-3.5-turbo-16k',
                       'gpt-4',
-                      'gpt-4-0613',
-                      'gpt-4-32k',
-                      'gpt-4-32k-0613'
+                      'gpt-4-0314',
+                      'claude-instant-100k'
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

@@ -4,6 +4,7 @@ import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:flutter_chatgpt/data/glm.dart';
 import 'package:flutter_chatgpt/data/if.dart';
 import 'package:flutter_chatgpt/data/llm.dart';
+import 'package:flutter_chatgpt/data/you.dart';
 import 'package:flutter_chatgpt/repository/conversation.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -42,8 +43,8 @@ class MessageRepository {
       case "OPENAI":
         ChatGpt().getResponse(messages, onResponse, errorCallback, onSuccess);
         break;
-      case "CHATGLM":
-        ChatGlM().getResponse(messages, onResponse, errorCallback, onSuccess);
+      case "You":
+        YouAi().getResponse(messages, onResponse, errorCallback, onSuccess);
         break;
       case "IF":
         ChatIF().getResponse(messages, onResponse, errorCallback, onSuccess);

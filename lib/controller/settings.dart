@@ -7,13 +7,13 @@ import 'package:get_storage/get_storage.dart';
 class SettingsController extends GetxController {
   final isObscure = true.obs;
   final openAiKey = "".obs;
-  final glmBaseUrl = "".obs;
+  final youCode = "".obs;
 
   final openAiBaseUrl = "https://api.openai-proxy.com".obs;
 
   final themeMode = ThemeMode.system.obs;
 
-  final gptModel = "gpt-3.5-turbo".obs;
+  final gptModel = "".obs;
 
   final locale = const Locale('zh').obs;
 
@@ -34,6 +34,7 @@ class SettingsController extends GetxController {
     await getOpenAiBaseUrlFromPreferences();
     await getOpenAiKeyFromPreferences();
     await getGptModelFromPreferences();
+    await getYouCodeFromPreferences();
     await getUseStreamFromPreferences();
     await initAppVersion();
     super.onInit();
@@ -43,16 +44,16 @@ class SettingsController extends GetxController {
     version.value = await getAppVersion();
   }
 
-  void setGlmBaseUrl(String baseUrl) {
-    glmBaseUrl.value = baseUrl;
+  void setYouCode(String baseUrl) {
+    youCode.value = baseUrl;
     GetStorage _box = GetStorage();
-    _box.write('glmBaseUrl', baseUrl);
+    _box.write('youCode', baseUrl);
   }
 
-  getGlmBaseUrlFromPreferences() async {
+  getYouCodeFromPreferences() async {
     GetStorage _box = GetStorage();
-    String baseUrl = _box.read('glmBaseUrl') ?? "https://api.openai-proxy.com";
-    setGlmBaseUrl(baseUrl);
+    String baseUrl = _box.read('youCode') ?? "";
+    setYouCode(baseUrl);
   }
 
   void setOpenAiKey(String text) {
@@ -76,8 +77,7 @@ class SettingsController extends GetxController {
 
   getOpenAiBaseUrlFromPreferences() async {
     GetStorage _box = GetStorage();
-    String baseUrl =
-        _box.read('openAiBaseUrl') ?? "https://api.openai-proxy.com";
+    String baseUrl = _box.read('openAiBaseUrl') ?? "https://ai.fakeopen.com";
     setOpenAiBaseUrl(baseUrl);
   }
 

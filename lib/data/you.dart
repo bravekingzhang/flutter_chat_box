@@ -10,7 +10,7 @@ abstract class LLM {
       ValueChanged<Message> errorCallback, ValueChanged<Message> onSuccess);
 }
 
-class ChatGpt extends LLM {
+class YouAi extends LLM {
   @override
   getResponse(
       List<Message> messages,
