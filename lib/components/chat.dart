@@ -125,7 +125,7 @@ class _ChatWindowState extends State<ChatWindow> {
   }
 
   void _sendMessage() {
-    final message = _controller.text;
+    final message = _controller.text.trim();
     final MessageController messageController = Get.find();
     final ConversationController conversationController = Get.find();
     if (message.isNotEmpty) {

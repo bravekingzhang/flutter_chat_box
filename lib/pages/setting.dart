@@ -201,7 +201,7 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                     height: 20,
                   )
                 : const SizedBox(),
-            controller.llm.value == "OpenAI"
+            controller.llm.value == "OpenAI" || controller.llm.value == "You"
                 ? DropdownButtonFormField(
                     value: controller.openAiBaseUrl.value,
                     isExpanded: true,
@@ -224,6 +224,7 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                       'https://ai.fakeopen.com',
                       'https://api.openai-proxy.com',
                       'https://api.openai.com',
+                      'https://bard.brzhang.club/api/chat'
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
