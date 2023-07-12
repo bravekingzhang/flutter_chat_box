@@ -62,11 +62,11 @@ release dir 可以直接下载 release 版本，也可以:
 
 #### 效果看这里
 
-<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/YouAi.png"  style="width: 50%;">
+<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/YouAi.jpg"  style="width: 50%;">
 
 #### 设置
 
-<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/YouAiSetting.png"  style="width: 50%;">
+<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/YouAiSetting.jpg"  style="width: 50%;">
 
 # 开源共建
 
