@@ -43,7 +43,7 @@ class MessageRepository {
       case "OPENAI":
         ChatGpt().getResponse(messages, onResponse, errorCallback, onSuccess);
         break;
-      case "You":
+      case "YOU":
         YouAi().getResponse(messages, onResponse, errorCallback, onSuccess);
         break;
       case "IF":

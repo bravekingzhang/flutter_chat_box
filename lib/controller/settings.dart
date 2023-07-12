@@ -33,6 +33,7 @@ class SettingsController extends GetxController {
     await getLocaleFromPreferences();
     await getOpenAiBaseUrlFromPreferences();
     await getOpenAiKeyFromPreferences();
+    await getLLmFromPreferences();
     await getGptModelFromPreferences();
     await getYouCodeFromPreferences();
     await getUseStreamFromPreferences();
@@ -147,14 +148,22 @@ class SettingsController extends GetxController {
     _box.write('useWebSearch', value);
   }
 
-  void getUseWebSearchFromPreferences() async {
+  getUseWebSearchFromPreferences() async {
     GetStorage _box = GetStorage();
     bool useWebSearch = _box.read('useWebSearch') ?? false;
     setUseWebSearch(useWebSearch);
   }
 
+  getLLmFromPreferences() async {
+    GetStorage _box = GetStorage();
+    String llm = _box.read('llm') ?? "OpenAI";
+    setLlm(llm);
+  }
+
   void setLlm(String text) {
     llm.value = text;
+    GetStorage _box = GetStorage();
+    _box.write('llm', text);
   }
 
   void setLocale(Locale lol) {

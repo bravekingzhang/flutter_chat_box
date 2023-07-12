@@ -141,6 +141,9 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                     ),
                     autovalidateMode: AutovalidateMode.always,
                     maxLines: 1,
+                    onChanged: (value) => {
+                      controller.setYouCode(value),
+                    },
                     onEditingComplete: () {},
                     onFieldSubmitted: (value) {
                       controller.setYouCode(value);
@@ -193,7 +196,7 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                     height: 20,
                   )
                 : const SizedBox(),
-            controller.llm.value == "OpenAI" || controller.llm.value == "You"
+            controller.llm.value == "OpenAI"
                 ? DropdownButtonFormField(
                     value: controller.openAiBaseUrl.value,
                     isExpanded: true,
@@ -216,7 +219,6 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                       'https://ai.fakeopen.com',
                       'https://api.openai-proxy.com',
                       'https://api.openai.com',
-                      'https://bard.brzhang.club/api/chat'
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
