@@ -35,9 +35,16 @@ class YouAi extends LLM {
       var content = "";
       await for (final chunk in response.stream.transform(utf8.decoder)) {
         // ignore: prefer_typing_uninitialized_variables
+
+        String data = chunk.split('\n').firstWhere(
+            (element) => element.startsWith("data:"),
+            orElse: () => 'No matching data');
+        if (!data.startsWith("data:")) {
+          continue;
+        }
         var response;
         try {
-          response = jsonDecode(chunk);
+          response = jsonDecode(data.split("data:")[1].trim());
         } catch (e) {
           // ignore: avoid_print
           response = null;
@@ -56,7 +63,7 @@ class YouAi extends LLM {
               text: content,
               role: Role.assistant));
         } else {
-          onSuccess(Message(
+          onResponse(Message(
               conversationId: messageToBeSend.conversationId,
               text: chunk,
               role: Role.assistant));
