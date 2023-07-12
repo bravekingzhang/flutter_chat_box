@@ -53,10 +53,20 @@ release dir 可以直接下载 release 版本，也可以:
 - [x] prompt 支持
 - [x] 增加了打字机的震动效果
 - [x] 支持 web 搜索能力
-- [ ] 支持 ChatGlm 等其他模型
+- [x] 支持 YouAi，集成 GPT4
 - [ ] 一键到出会话支持
 - [ ] 支持高级搜索
 - [ ] 等你 issue 来支持
+
+### 关于 YouAi 中使用 GPT4
+
+#### 效果看这里
+
+<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/YouAi.png"  style="width: 50%;">
+
+#### 设置
+
+<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/YouAiSetting.png"  style="width: 50%;">
 
 # 开源共建
 
