@@ -28,28 +28,26 @@ class YouAi extends LLM {
     request.body = requestBody;
     try {
       final response = await request.send();
-      /**  chunk like this
-     *  event: delta
-     *   data: {"delta": "j", "response": "j", "finished": false}
-     */
       var content = "";
+      var currentData = "";
       await for (final chunk in response.stream.transform(utf8.decoder)) {
         // ignore: prefer_typing_uninitialized_variables
-
-        String data = chunk.split('\n').firstWhere(
-            (element) => element.startsWith("data:"),
-            orElse: () => 'No matching data');
-        if (!data.startsWith("data:")) {
-          continue;
-        }
         var response;
-        try {
-          response = jsonDecode(data.split("data:")[1].trim());
-        } catch (e) {
-          // ignore: avoid_print
-          response = null;
+        // debugPrint(chunk);
+        currentData = currentData + chunk;
+        debugPrint(currentData);
+
+        if (currentData.contains("data:") && !currentData.contains("[DONE]")) {
+          try {
+            response = jsonDecode(currentData.split("data:")[1].trim());
+          } catch (e) {
+            // ignore: avoid_print
+            response = null;
+            continue;
+          }
         }
         if (response != null && response["choices"] != null) {
+          currentData = "";
           OpenAIStreamChatCompletionModel model =
               OpenAIStreamChatCompletionModel.fromMap(response);
           content = content + model.choices[0].delta.content!;
@@ -57,17 +55,18 @@ class YouAi extends LLM {
               conversationId: messageToBeSend.conversationId,
               text: content,
               role: Role.assistant));
-        } else if (chunk.contains('[DONE]')) {
+        } else if (currentData.contains('[DONE]')) {
           onSuccess(Message(
               conversationId: messageToBeSend.conversationId,
               text: content,
               role: Role.assistant));
         } else {
-          onResponse(Message(
+          errorCallback(Message(
               conversationId: messageToBeSend.conversationId,
-              text: chunk,
+              text: currentData,
               role: Role.assistant));
         }
+        debugPrint(content);
       }
     } catch (e) {
       errorCallback(Message(

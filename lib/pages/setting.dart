@@ -1,3 +1,4 @@
+import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatgpt/controller/settings.dart';
 import 'package:get/get.dart';
@@ -185,6 +186,10 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                     ),
                     autovalidateMode: AutovalidateMode.always,
                     maxLines: 1,
+                    onChanged: (value) => {
+                      controller.setOpenAiKey(value),
+                      OpenAI.apiKey = value,
+                    },
                     onFieldSubmitted: (value) {
                       controller.setOpenAiKey(value);
                     },

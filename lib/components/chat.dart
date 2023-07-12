@@ -228,9 +228,7 @@ class _ChatWindowState extends State<ChatWindow> {
   }
 
   void _handleKeyEvent(RawKeyEvent value) {
-    if ((value.isKeyPressed(LogicalKeyboardKey.enter) &&
-            value.isControlPressed) ||
-        (value.isKeyPressed(LogicalKeyboardKey.enter) && value.isMetaPressed)) {
+    if (value.isKeyPressed(LogicalKeyboardKey.enter)) {
       _sendMessage();
     }
   }
