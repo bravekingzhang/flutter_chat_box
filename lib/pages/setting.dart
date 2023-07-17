@@ -154,6 +154,19 @@ class SettingPage extends GetResponsiveView<SettingsController> {
             const SizedBox(
               height: 20,
             ),
+            // controller.llm.value == "You"
+            //     ? SwitchListTile(
+            //         title: Text(
+            //           "YouVip".tr,
+            //           style: const TextStyle(
+            //               fontSize: 12, fontWeight: FontWeight.bold),
+            //         ),
+            //         value: controller.youVip.value,
+            //         onChanged: (value) {
+            //           controller.setYouVip(value);
+            //         })
+            //     : const SizedBox(),
+            // controller.llm.value == "You" ? const Divider() : const SizedBox(),
             controller.llm.value == "OpenAI"
                 ? TextFormField(
                     initialValue: controller.openAiKey.value,

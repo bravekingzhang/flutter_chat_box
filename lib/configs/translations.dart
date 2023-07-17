@@ -58,7 +58,7 @@ class MyTranslations extends Translations {
           "useWebSearch": "使用 Web 搜索",
           "gptModel": "选择 GPT Model",
           "llmHint": "选择大语言模型",
-          "youCode": "请输入输入又又大佬的邀请码",
+          "youCode": "请输入You邀请码",
           "youCodeTips": "yk-xxxx-xxxx-xxxx-xxxx"
         }
       };

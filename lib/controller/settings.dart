@@ -20,6 +20,7 @@ class SettingsController extends GetxController {
   final useStream = true.obs;
 
   final useWebSearch = false.obs;
+  final youVip = false.obs;
 
   final llm = "OpenAI".obs;
 
@@ -37,6 +38,7 @@ class SettingsController extends GetxController {
     await getGptModelFromPreferences();
     await getYouCodeFromPreferences();
     await getUseStreamFromPreferences();
+    await getYouVipFromPreferences();
     await initAppVersion();
     super.onInit();
   }
@@ -146,6 +148,18 @@ class SettingsController extends GetxController {
     useWebSearch.value = value;
     GetStorage _box = GetStorage();
     _box.write('useWebSearch', value);
+  }
+
+  void setYouVip(bool value) {
+    youVip.value = value;
+    GetStorage _box = GetStorage();
+    _box.write('youVip', value);
+  }
+
+  getYouVipFromPreferences() async {
+    GetStorage _box = GetStorage();
+    bool youVip = _box.read('youVip') ?? false;
+    setYouVip(youVip);
   }
 
   getUseWebSearchFromPreferences() async {
