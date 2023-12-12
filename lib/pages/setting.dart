@@ -107,7 +107,7 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                 ),
                 filled: true,
               ),
-              items: <String>['OpenAI', 'You', 'IF']
+              items: <String>['OpenAI']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -154,19 +154,6 @@ class SettingPage extends GetResponsiveView<SettingsController> {
             const SizedBox(
               height: 20,
             ),
-            // controller.llm.value == "You"
-            //     ? SwitchListTile(
-            //         title: Text(
-            //           "YouVip".tr,
-            //           style: const TextStyle(
-            //               fontSize: 12, fontWeight: FontWeight.bold),
-            //         ),
-            //         value: controller.youVip.value,
-            //         onChanged: (value) {
-            //           controller.setYouVip(value);
-            //         })
-            //     : const SizedBox(),
-            // controller.llm.value == "You" ? const Divider() : const SizedBox(),
             controller.llm.value == "OpenAI"
                 ? TextFormField(
                     initialValue: controller.openAiKey.value,
@@ -234,10 +221,9 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                       filled: true,
                     ),
                     items: <String>[
-                      'https://ai.fakeopen.com',
                       'https://api.openai-proxy.com',
                       'https://api.openai.com',
-                      'https://bard.brzhang.club/api/chat'
+                      'https://api.wgpt.in'
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -282,7 +268,6 @@ class SettingPage extends GetResponsiveView<SettingsController> {
                       'gpt-3.5-turbo-16k',
                       'gpt-4',
                       'gpt-4-0314',
-                      'claude-instant-100k'
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
