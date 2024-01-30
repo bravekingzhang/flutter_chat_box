@@ -78,11 +78,9 @@ release dir 可以直接下载 release 版本，也可以:
 
 <img src="https://github.com/bravekingzhang/utools-code2flow-official/blob/main/shoukuanma.png" alt="收款码" style="width: 40%;" />
 
-# 加入群聊
+# 加入群聊？
 
-<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/qunliao.pic.jpg"  style="width: 50%;">
-
-添加我，注明自己 github 账号名，入群的目的，加入群聊，一起学习 prompt 工程。
+啥？请看上面
 
 # License: MIT
 
