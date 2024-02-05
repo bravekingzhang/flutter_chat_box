@@ -53,20 +53,9 @@ release dir 可以直接下载 release 版本，也可以:
 - [x] prompt 支持
 - [x] 增加了打字机的震动效果
 - [x] 支持 web 搜索能力
-- [x] 支持 YouAi，集成 GPT4
 - [ ] 一键到出会话支持
 - [ ] 支持高级搜索
 - [ ] 等你 issue 来支持
-
-### 关于 YouAi 中使用 GPT4
-
-#### 效果看这里
-
-<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/YouAi.jpg"  style="width: 50%;">
-
-#### 设置
-
-<img src="https://github.com/bravekingzhang/flutter_chat_box/blob/main/artificial/YouAiSetting.jpg"  style="width: 50%;">
 
 # 开源共建
 
@@ -75,7 +64,8 @@ release dir 可以直接下载 release 版本，也可以:
 ### 加群讨论
 欢迎加群讨论技术？随意打赏，请备注 github 名
 
-<img width="200" alt="image" src="https://github.com/bravekingzhang/react-ai-chat/assets/4476322/7c457992-a0bc-49a3-9bd6-f23b5f1a595
+<img width="200" alt="image" src="https://github.com/bravekingzhang/react-ai-chat/assets/4476322/7c457992-a0bc-49a3-9bd6-f23b5f1a595e">
+
 
 
 # License: MIT
